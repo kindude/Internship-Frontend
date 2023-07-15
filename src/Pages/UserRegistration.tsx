@@ -1,25 +1,13 @@
 import React from "react";
-
+import Input from "../components/layout/Input";
 
 const UserRegistrationPage: React.FC = () =>{
     return(
         <form action="/register" method="POST">
-        <div>
-          <label htmlFor="name">Name:</label>
-          <input type="text" id="name" name="name" required/>
-        </div>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input type="email" id="email" name="email" required/>
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input type="password" id="password" name="password" required/>
-        </div>
-        <div>
-          <label htmlFor="confirm-password">Confirm Password:</label>
-          <input type="password" id="confirm-password" name="confirm-password" required/>
-        </div>
+        <Input htmlFor="name" text="Name:" type="text" id="name" name="name" accept="*/*"></Input>
+        <Input htmlFor="email" text="Email:" type="email" id="email" name="email" accept="*/*"></Input>
+        <Input htmlFor="password" text="Password:" type="password" id="password" name="password" accept="*/*"></Input>
+        <Input htmlFor="confirm-password" text="Confirm Password:" type="password" id="confirm-password" name="confirm-password" accept="*/*"></Input>
         <div>
           <input type="submit" value="Register"/>
         </div>

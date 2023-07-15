@@ -1,22 +1,13 @@
 import React from "react";
-
+import Input from "../components/layout/Input";
 
 const UserProfilePage: React.FC = () => {
 
     return (
         <div>
-            <div>
-                <label htmlFor="name">Name:</label>
-                <input type="text" id="name" required />
-            </div>
-            <div>
-                <label htmlFor="email">Email:</label>
-                <input type="email" id="email" required />
-            </div>
-            <div>
-                <label htmlFor="photo">Photo:</label>
-                <input type="file" id="photo" accept="image/*" />
-            </div>
+            <Input htmlFor="name" text="Name:" type="text" id="name" name="name" accept="*/*"></Input>
+            <Input htmlFor="email" text="Email:" type="email" id="email" name="email" accept="*/*"></Input>
+            <Input htmlFor="photo" text="Photo:" type="file" id="photo" name="email" accept="image/*"></Input>
         </div>
 
 

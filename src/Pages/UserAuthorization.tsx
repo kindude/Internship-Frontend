@@ -1,16 +1,14 @@
 import React from "react";
+import Input from "../components/layout/Input";
 
 const UserAuthorizationPage: React.FC = () => {
     return(
         <form action="/auth" method="POST">
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input type="email" id="email" name="email" required/>
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input type="password" id="password" name="password" required/>
-        </div>
+
+        <Input htmlFor="email" text="Email:" type="email" id="email" name="email" accept="*/*"></Input>
+
+        <Input htmlFor="password" text="Password:" type="password" id="password" name="password" accept="*/*"></Input>
+
         <div>
           <input type="submit" value="Log in"/>
         </div>
