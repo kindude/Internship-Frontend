@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AboutPage from "./pages/About";
 import WelcomePage from "./pages/Welcome";
@@ -12,10 +12,15 @@ import CompaniesListPage from "./pages/CompaniesList";
 import Modal from "./components/modal/Modal";
 import CompanyProfilePage from "./pages/CompanyProfile";
 import NavBar from "./components/layout/Navbar";
+import axiosInstance from "./api/api_instance";
+import { servicesVersion } from "typescript";
 
 
 const AppRouter: React.FC = () => {
+
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const [isBackendUp, setIsBackendUp] = useState(true);
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -25,10 +30,27 @@ const AppRouter: React.FC = () => {
         setIsModalOpen(false);
     };
 
+    useEffect(() => {
+        // Perform health check when the component mounts
+        checkBackendHealth();
+    }, []);
+
+    const checkBackendHealth = () => {
+        axiosInstance.get('/api/health')
+            .then(() => {
+                setIsBackendUp(true);
+                console.log("Backend is healthy");
+            })
+            .catch(() => {
+                setIsBackendUp(false);
+                console.log("Backend is not responding");
+            });
+    };
+
     return (
         <Router>
             <Header />
-            <NavBar/>
+            <NavBar />
             <Routes>
                 <Route path="/" element={<WelcomePage />} />
                 <Route path="/about" element={<AboutPage />} />
@@ -38,6 +60,20 @@ const AppRouter: React.FC = () => {
                 <Route path="/profile" element={<UserProfilePage />} />
                 <Route path="/companies" element={<CompaniesListPage />} />
                 <Route path="/company" element={<CompanyProfilePage />} />
+                <Route
+                    path="/api/health"
+                    element={
+                        isBackendUp ? (
+                            <div>
+                                <h1>Backend is healthy</h1>
+                            </div>
+                        ) : (
+                            <div>
+                                <h1>Backend is not responding</h1>
+                            </div>
+                        )
+                    }
+                />
             </Routes>
             <Footer />
             <button onClick={openModal}>Open Modal</button>
