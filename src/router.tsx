@@ -14,13 +14,14 @@ import CompanyProfilePage from "./pages/CompanyProfile";
 import NavBar from "./components/layout/Navbar";
 import axiosInstance from "./api/api_instance";
 import { servicesVersion } from "typescript";
+import { checkBackendHealth } from "./api/api_instance";
 
 
 const AppRouter: React.FC = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-
     const [isBackendUp, setIsBackendUp] = useState(true);
+
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -35,17 +36,7 @@ const AppRouter: React.FC = () => {
         checkBackendHealth();
     }, []);
 
-    const checkBackendHealth = () => {
-        axiosInstance.get('/api/health')
-            .then(() => {
-                setIsBackendUp(true);
-                console.log("Backend is healthy");
-            })
-            .catch(() => {
-                setIsBackendUp(false);
-                console.log("Backend is not responding");
-            });
-    };
+    
 
     return (
         <Router>
