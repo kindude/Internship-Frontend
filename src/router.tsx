@@ -33,7 +33,11 @@ const AppRouter: React.FC = () => {
 
     useEffect(() => {
         // Perform health check when the component mounts
-        checkBackendHealth();
+        const performHealthCheck = async () => {
+          const backendStatus = await checkBackendHealth();
+          setIsBackendUp(backendStatus);
+        };
+        performHealthCheck();
     }, []);
 
     
