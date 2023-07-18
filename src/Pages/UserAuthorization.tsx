@@ -1,5 +1,6 @@
 import React from "react";
 import Input from "../components/layout/Input";
+import Button from "../components/layout/Button";
 
 const UserAuthorizationPage: React.FC = () => {
     return(
@@ -9,9 +10,8 @@ const UserAuthorizationPage: React.FC = () => {
 
         <Input htmlFor="password" text="Password:" type="password" id="password" name="password" accept="*/*"></Input>
 
-        <div>
-          <input type="submit" value="Log in"/>
-        </div>
+
+        <Button value="Log in"></Button>
       </form>
 
     );
