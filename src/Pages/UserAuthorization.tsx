@@ -11,7 +11,7 @@ const UserAuthorizationPage: React.FC = () => {
         <Input htmlFor="password" text="Password:" type="password" id="password" name="password" accept="*/*"></Input>
 
 
-        <Button value="Log in"></Button>
+        <Button text="Log in" type="submit"></Button>
       </form>
 
     );
