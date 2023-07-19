@@ -10,7 +10,7 @@ const UserRegistrationPage: React.FC = () =>{
         <Input htmlFor="password" text="Password:" type="password" id="password" name="password" accept="*/*"></Input>
         <Input htmlFor="confirm-password" text="Confirm Password:" type="password" id="confirm-password" name="confirm-password" accept="*/*"></Input>
 
-        <Button value="Register"></Button>
+        <Button text="Register" type="submit"></Button>
       </form>
     );
 };
