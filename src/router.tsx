@@ -15,6 +15,7 @@ import NavBar from "./components/layout/Navbar";
 import axiosInstance from "./api/api_instance";
 import { servicesVersion } from "typescript";
 import { checkBackendHealth } from "./api/api_instance";
+import BackendStatus from "./components/layout/BackendStatus";
 
 
 const AppRouter: React.FC = () => {
@@ -55,20 +56,7 @@ const AppRouter: React.FC = () => {
                 <Route path="/profile" element={<UserProfilePage />} />
                 <Route path="/companies" element={<CompaniesListPage />} />
                 <Route path="/company" element={<CompanyProfilePage />} />
-                <Route
-                    path="/api/health"
-                    element={
-                        isBackendUp ? (
-                            <div>
-                                <h1>Backend is healthy</h1>
-                            </div>
-                        ) : (
-                            <div>
-                                <h1>Backend is not responding</h1>
-                            </div>
-                        )
-                    }
-                />
+                <Route path="/api/health" element={<BackendStatus isBackendUp={isBackendUp} />} />
             </Routes>
             <Footer />
             <button onClick={openModal}>Open Modal</button>
