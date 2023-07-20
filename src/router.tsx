@@ -56,7 +56,7 @@ const AppRouter: React.FC = () => {
                 <Route path="/profile" element={<UserProfilePage />} />
                 <Route path="/companies" element={<CompaniesListPage />} />
                 <Route path="/company" element={<CompanyProfilePage />} />
-                <Route path="/api/health" element={<BackendStatus isBackendUp={isBackendUp} />} />
+                <Route path="/api/health" element={<BackendStatus />} />
             </Routes>
             <Footer />
             <button onClick={openModal}>Open Modal</button>
