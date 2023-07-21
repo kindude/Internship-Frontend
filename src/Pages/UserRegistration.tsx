@@ -1,5 +1,6 @@
 import React from "react";
 import Input from "../components/layout/Input";
+import Button from "../components/layout/Button";
 
 const UserRegistrationPage: React.FC = () =>{
     return(
@@ -8,9 +9,8 @@ const UserRegistrationPage: React.FC = () =>{
         <Input htmlFor="email" text="Email:" type="email" id="email" name="email" accept="*/*"></Input>
         <Input htmlFor="password" text="Password:" type="password" id="password" name="password" accept="*/*"></Input>
         <Input htmlFor="confirm-password" text="Confirm Password:" type="password" id="confirm-password" name="confirm-password" accept="*/*"></Input>
-        <div>
-          <input type="submit" value="Register"/>
-        </div>
+
+        <Button text="Register" type="submit"></Button>
       </form>
     );
 };

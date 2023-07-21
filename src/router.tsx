@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AboutPage from "./pages/About";
 import WelcomePage from "./pages/Welcome";
@@ -12,10 +12,17 @@ import CompaniesListPage from "./pages/CompaniesList";
 import Modal from "./components/modal/Modal";
 import CompanyProfilePage from "./pages/CompanyProfile";
 import NavBar from "./components/layout/Navbar";
+import axiosInstance from "./api/api_instance";
+import { servicesVersion } from "typescript";
+import { checkBackendHealth } from "./api/api_instance";
+import BackendStatus from "./components/layout/BackendStatus";
 
 
 const AppRouter: React.FC = () => {
+
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -25,10 +32,14 @@ const AppRouter: React.FC = () => {
         setIsModalOpen(false);
     };
 
+
+
+    
+
     return (
         <Router>
             <Header />
-            <NavBar/>
+            <NavBar />
             <Routes>
                 <Route path="/" element={<WelcomePage />} />
                 <Route path="/about" element={<AboutPage />} />
@@ -38,6 +49,7 @@ const AppRouter: React.FC = () => {
                 <Route path="/profile" element={<UserProfilePage />} />
                 <Route path="/companies" element={<CompaniesListPage />} />
                 <Route path="/company" element={<CompanyProfilePage />} />
+                <Route path="/api/health" element={<BackendStatus />} />
             </Routes>
             <Footer />
             <button onClick={openModal}>Open Modal</button>
