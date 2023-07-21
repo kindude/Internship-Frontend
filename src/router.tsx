@@ -21,7 +21,7 @@ import BackendStatus from "./components/layout/BackendStatus";
 const AppRouter: React.FC = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isBackendUp, setIsBackendUp] = useState(true);
+
 
 
     const openModal = () => {
@@ -32,14 +32,7 @@ const AppRouter: React.FC = () => {
         setIsModalOpen(false);
     };
 
-    useEffect(() => {
-        // Perform health check when the component mounts
-        const performHealthCheck = async () => {
-          const backendStatus = await checkBackendHealth();
-          setIsBackendUp(backendStatus);
-        };
-        performHealthCheck();
-    }, []);
+
 
     
 
