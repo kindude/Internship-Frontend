@@ -21,7 +21,14 @@ const UserRegistrationPage: React.FC = () => {
 
   const validationSchema = Yup.object({
     name: Yup.string().required("Name is required"),
-    email: Yup.string().email("Invalid email address").required("Email is required"),
+    email: Yup.string()
+      .email("Invalid email address")
+      .matches(
+        // Regular expression for email validation
+        /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
+        "Invalid email address"
+      )
+      .required("Email is required"),
     password: Yup.string()
       .min(8, "Password must have at least 8 characters")
       .required("Password is required"),
@@ -40,53 +47,45 @@ const UserRegistrationPage: React.FC = () => {
     >
       {formik => (
         <Form>
-          <div>
-            <Input
-              htmlFor="name"
-              text="Name:"
-              type="text"
-              id="name"
-              name="name"
-              accept="*/*"
-            />
-            <ErrorMessage name="name" render={msg => <div>{msg}</div>} />
-          </div>
+          <Input
+            htmlFor="name"
+            text="Name:"
+            type="text"
+            id="name"
+            name="name"
+            accept="*/*"
+          />
+          <ErrorMessage name="name" render={msg => <div>{msg}</div>} />
 
-          <div>
-            <Input
-              htmlFor="email"
-              text="Email:"
-              type="email"
-              id="email"
-              name="email"
-              accept="*/*"
-            />
-            <ErrorMessage name="email" render={msg => <div>{msg}</div>} />
-          </div>
+          <Input
+            htmlFor="email"
+            text="Email:"
+            type="email"
+            id="email"
+            name="email"
+            accept="*/*"
+          />
+          <ErrorMessage name="email" render={msg => <div>{msg}</div>} />
 
-          <div>
-            <Input
-              htmlFor="password"
-              text="Password:"
-              type="password"
-              id="password"
-              name="password"
-              accept="*/*"
-            />
-            <ErrorMessage name="password" render={msg => <div>{msg}</div>} />
-          </div>
+          <Input
+            htmlFor="password"
+            text="Password:"
+            type="password"
+            id="password"
+            name="password"
+            accept="*/*"
+          />
+          <ErrorMessage name="password" render={msg => <div>{msg}</div>} />
 
-          <div>
-            <Input
-              htmlFor="confirm-password"
-              text="Confirm Password:"
-              type="password"
-              id="confirm-password"
-              name="confirmPassword" 
-              accept="*/*"
-            />
-            <ErrorMessage name="confirmPassword" render={msg => <div>{msg}</div>} />
-          </div>
+          <Input
+            htmlFor="confirm-password"
+            text="Confirm Password:"
+            type="password"
+            id="confirm-password"
+            name="confirmPassword" // Corrected name prop
+            accept="*/*"
+          />
+          <ErrorMessage name="confirmPassword" render={msg => <div>{msg}</div>} />
 
           <Button text="Register" type="submit" />
         </Form>
