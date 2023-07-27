@@ -34,8 +34,6 @@ const AppRouter: React.FC = () => {
 
 
 
-    
-
     return (
         <Router>
             <Header />
