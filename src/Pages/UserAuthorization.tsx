@@ -5,17 +5,23 @@ import emailValidation from "../components/validation/validationEmail";
 import { Formik, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
+
+
 interface FormValues {
   email: string;
   password: string;
 }
 
 const UserAuthorizationPage: React.FC = () => {
+  const d = process.env.REACT_APP_DOMAIN
+  console.log(d)
+
   const initialValues: FormValues = {
     email: "",
     password: "",
   };
 
+//const { loginWithRedirect } = useAuth0();
   return (
     <Formik
       initialValues={initialValues}
@@ -53,6 +59,7 @@ const UserAuthorizationPage: React.FC = () => {
           </div>
 
           <Button text="Log In" type="submit" />
+          {/* <Button type="submit" text="Log In with Auth0" onClick={() => loginWithRedirect()} /> */}
         </Form>
       )}
     </Formik>
