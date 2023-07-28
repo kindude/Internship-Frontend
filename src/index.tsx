@@ -3,12 +3,19 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import store  from './store';
 import AppRouter from './router';
+import { createRoot } from "react-dom/client";
 
-ReactDOM.render(
-  <Provider store={store}>
-    <React.StrictMode>
+
+const rootElement = document.getElementById('root');
+
+if (rootElement) {
+  const root = createRoot(rootElement);
+
+  root.render(
+    <Provider store={store}>
       <AppRouter />
-    </React.StrictMode>
-  </Provider>,
-  document.getElementById('root')
-);
+    </Provider>
+  );
+} else {
+  console.error("Element with id 'root' not found in the DOM.");
+}

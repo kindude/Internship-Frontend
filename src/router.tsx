@@ -18,6 +18,7 @@ import { checkBackendHealth } from "./api/api_instance";
 import BackendStatus from "./components/layout/BackendStatus";
 
 
+
 const AppRouter: React.FC = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,9 +33,19 @@ const AppRouter: React.FC = () => {
         setIsModalOpen(false);
     };
 
-
+    // const myDomain = process.env.DOMAIN || "http://localhost:8000";
+    // const myClientId = process.env.CLIENT_ID || "12345";
 
     return (
+
+        //     <Auth0Provider
+        //     domain={myDomain}
+        //     clientId={myClientId}
+        //     authorizationParams={{
+        //     redirect_uri: window.location.origin
+        //     }}
+        // >
+  
         <Router>
             <Header />
             <NavBar />
@@ -56,6 +67,7 @@ const AppRouter: React.FC = () => {
                 <p>This is the content of the modal window.</p>
             </Modal>
         </Router>
+        // </Auth0Provider>
     );
 };
 
