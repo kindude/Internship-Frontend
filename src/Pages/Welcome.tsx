@@ -1,9 +1,9 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../store';
+import { RootState } from '../store/store';
 import { updateString } from '../actions/stringAction';
-import store from '../store';
+import store from '../store/store';
 
 const WelcomePage: React.FC = () => {
   const testString = useSelector((state: RootState) => state.stringValue.value);

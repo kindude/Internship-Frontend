@@ -76,6 +76,7 @@ const UserRegistrationPage: React.FC = () => {
           <ErrorMessage name="confirmPassword" render={msg => <div>{msg}</div>} />
 
           <Button text="Register" type="submit" />
+          <Button type="submit" text="Log In with Auth0" onClick={() => loginWithRedirect()} />
         </Form>
       )}
     </Formik>

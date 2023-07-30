@@ -7,7 +7,6 @@ import * as path from 'path';
 
 
 const AboutPage: React.FC = () =>{
-    console.log(process.env.REACT_APP_ONE)
     return(
         
         <div>

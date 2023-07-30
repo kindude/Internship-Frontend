@@ -1,0 +1,1 @@
+process.env['APP_REACT_DOMAIN'] = 'dev-nusd43iygpsjwqlj.us.auth0.com';
