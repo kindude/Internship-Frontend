@@ -33,18 +33,8 @@ const AppRouter: React.FC = () => {
         setIsModalOpen(false);
     };
 
-    // const myDomain = process.env.DOMAIN || "http://localhost:8000";
-    // const myClientId = process.env.CLIENT_ID || "12345";
-
     return (
 
-        //     <Auth0Provider
-        //     domain={myDomain}
-        //     clientId={myClientId}
-        //     authorizationParams={{
-        //     redirect_uri: window.location.origin
-        //     }}
-        // >
   
         <Router>
             <Header />
