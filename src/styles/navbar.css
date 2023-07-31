@@ -1,0 +1,33 @@
+/* styles/navbar.css */
+
+/* Styling for the navigation bar */
+.navbar {
+    display: flex;
+    justify-content: center;
+    background-color: #f0f0f0;
+    padding: 10px;
+  }
+  
+  /* Styling for the list items inside the navbar */
+  .navbar-list {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Styling for the links inside the navbar */
+  .navbar-list li {
+    margin: 0 10px;
+  }
+  
+  .navbar-list li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1.2rem;
+  }
+  
+  .navbar-list li a:hover {
+    color: #666;
+  }
+  

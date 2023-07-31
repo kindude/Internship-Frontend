@@ -1,5 +1,5 @@
 import React from "react";
-
+import '../styles/usersList.css';
 
 const UsersListPage: React.FC = () => {
 
@@ -11,8 +11,8 @@ const UsersListPage: React.FC = () => {
 
     return (
         <div>
-            <h1>Users List</h1>
-            <ul>
+            <h1 className="page-title" >Users List</h1>
+            <ul className="user-list" >
                 {
                     users.map(user => (
                         <li key={user.id}>{user.name}</li>
