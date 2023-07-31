@@ -18,7 +18,7 @@ const UserAuthorizationPage: React.FC = () => {
     password: "",
   };
 
-const { loginWithRedirect } = useAuth0();
+// const { loginWithRedirect } = useAuth0();
   return (
     <Formik
       initialValues={initialValues}
@@ -56,7 +56,7 @@ const { loginWithRedirect } = useAuth0();
           </div>
 
           <Button text="Log In" type="submit" />
-          <Button type="submit" text="Log In with Auth0" onClick={() => loginWithRedirect()} />
+          {/* <Button type="submit" text="Log In with Auth0" onClick={() => loginWithRedirect()} /> */}
         </Form>
       )}
     </Formik>
