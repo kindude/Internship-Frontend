@@ -3,24 +3,60 @@ import Input from "../components/layout/Input";
 import Button from "../components/layout/Button";
 import { Formik, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import emailValidation from "../components/validation/validationEmail"
-import commonValidation from "../components/validation/validationPassword"
+import emailValidation from "../components/validation/validationEmail";
+import commonValidation from "../components/validation/validationPassword";
+
+import axios from "axios";
 
 interface FormValues {
-  name: string;
+  username: string;
   email: string;
   password: string;
   confirmPassword: string;
+  city:string,
+  country: string,
+  phone: string,
+  status: boolean,
+  roles: string[]
+
+
 }
 
 const UserRegistrationPage: React.FC = () => {
   const initialValues: FormValues = {
-    name: "",
+    username: "",
     email: "",
     password: "",
-    confirmPassword: "",
+    confirmPassword:"",
+    city:"",
+    country: "",
+    phone:"",
+    status: true,
+    roles: ["user"]
+
   };
- 
+
+  const handleFormSubmit = async (values: FormValues) => {
+    // Exclude confirmPassword from the values object
+    const { confirmPassword, ...dataToSend } = values;
+  
+    try {
+      // Send a POST request to the backend API with the user registration data
+      const response = await axios.post("http://localhost:8000/users/register", {
+        ...dataToSend,
+        roles: values.roles,
+        status: values.status,
+      });
+  
+      console.log("Response from server:", response.data);
+  
+      // You can also redirect the user to a different page after successful registration
+      // window.location.href = "/success-page";
+    } catch (error) {
+      console.error("Error during form submission:", error);
+    }
+  };
+
 
   return (
     <Formik
@@ -30,20 +66,20 @@ const UserRegistrationPage: React.FC = () => {
         ...emailValidation.fields,
       })}
       onSubmit={(values: FormValues) => {
-        alert(JSON.stringify(values, null, 2));
+        handleFormSubmit(values);
       }}
     >
       {formik => (
         <Form>
           <Input
-            htmlFor="name"
+            htmlFor="username"
             text="Name:"
             type="text"
-            id="name"
-            name="name"
+            id="username"
+            name="username"
             accept="*/*"
           />
-          <ErrorMessage name="name" render={msg => <div>{msg}</div>} />
+          <ErrorMessage name="username" render={msg => <div>{msg}</div>} />
 
           <Input
             htmlFor="email"
@@ -70,13 +106,42 @@ const UserRegistrationPage: React.FC = () => {
             text="Confirm Password:"
             type="password"
             id="confirm-password"
-            name="confirmPassword" // Corrected name prop
+            name="confirmPassword"
             accept="*/*"
           />
           <ErrorMessage name="confirmPassword" render={msg => <div>{msg}</div>} />
 
-          <Button text="Register" type="submit" />
-          <Button type="submit" text="Log In with Auth0" onClick={() => loginWithRedirect()} />
+
+          <Input
+            htmlFor="city"
+            text="City:"
+            type="text"
+            id="city"
+            name="city"
+            accept="*/*"
+          />
+
+          <Input
+            htmlFor="country"
+            text="Country:"
+            type="text"
+            id="country"
+            name="country"
+            accept="*/*"
+          />
+          
+          
+          <Input
+            htmlFor="phone"
+            text="Phone:"
+            type="text"
+            id="phone"
+            name="phone"
+            accept="*/*"
+          />
+          
+          <Button text="Register" type="submit"/>
+          {/* <Button type="submit" text="Register" onClick={() => loginWithRedirect()} /> */}
         </Form>
       )}
     </Formik>
