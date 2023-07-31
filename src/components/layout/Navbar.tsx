@@ -1,36 +1,36 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 
+import '../../styles/navbar.css';
+
 const NavBar: React.FC = () => {
     return (
-        <nav>
+        <nav className="navbar-container">
             <ul className="navbar-list">
-                <li className="navbar-item">
-                    <Link to="/">Home</Link>
+
+                <li>
+                    <Link to="/">Welcome</Link>
                 </li>
-                <li className="navbar-item">
+                <li>
                     <Link to="/about">About</Link>
                 </li>
-                <li className="navbar-item">
+                <li>
                     <Link to="/users">Users</Link>
                 </li>
-                <li className="navbar-item">
-                    <Link to="/about">About</Link>
+                <li>
+                    <Link to="/companies">Companies</Link>
                 </li>
-                <li className="navbar-item">
-                    <Link to="/register">Registration</Link>
+                <li>
+                    <Link to="/auth">Log In</Link>
                 </li>
-                <li className="navbar-item">
-                    <Link to="/auth">Log in</Link>
-                </li>
-                <li className="navbar-item">
-                    <Link to="/profile">User's profile</Link>
-                </li>
-                <li className="navbar-item">
-                    <Link to="/company">Company's profile</Link>
+                <li>
+                    <Link to="/register">Register</Link>
                 </li>
 
             </ul>
+
+
+
         </nav>
     );
 };

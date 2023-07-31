@@ -16,7 +16,7 @@ import axiosInstance from "./api/api_instance";
 import { servicesVersion } from "typescript";
 import { checkBackendHealth } from "./api/api_instance";
 import BackendStatus from "./components/layout/BackendStatus";
-
+import { PrivateRoute } from "./types/types";
 
 
 const AppRouter: React.FC = () => {
@@ -40,13 +40,13 @@ const AppRouter: React.FC = () => {
             <Header />
             <NavBar />
             <Routes>
-                <Route path="/" element={<WelcomePage />} />
+                <Route path="/welcome" element={<WelcomePage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/register" element={<UserRegistrationPage />} />
                 <Route path="/auth" element={<UserAuthorizationPage />} />
-                <Route path="/users" element={<UsersListPage />} />
+                <Route path="/users" element={<PrivateRoute><UsersListPage /></PrivateRoute>} />
                 <Route path="/profile" element={<UserProfilePage />} />
-                <Route path="/companies" element={<CompaniesListPage />} />
+                <Route path="/companies" element={<PrivateRoute><CompaniesListPage /></PrivateRoute>} />
                 <Route path="/company" element={<CompanyProfilePage />} />
                 <Route path="/api/health" element={<BackendStatus />} />
             </Routes>

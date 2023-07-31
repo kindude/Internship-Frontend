@@ -1,13 +1,14 @@
 // src/store.ts
+import { configureStore } from "@reduxjs/toolkit";
+import stringReducer from "../reducers/slice"
+import { RootState } from "../types/types";
 
-import { createStore, combineReducers } from 'redux';
-import stringReducer from '../reducers/stringReducer';
 
-const rootReducer = combineReducers({
-  stringValue: stringReducer,
+const store = configureStore({
+  reducer: {
+    user: stringReducer, // Update this with the correct reducer name
+    // Add other reducers as needed
+  },
 });
 
-const store = createStore(rootReducer);
-
-export type RootState = ReturnType<typeof rootReducer>;
 export default store;

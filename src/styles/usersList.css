@@ -1,0 +1,18 @@
+/* styles/usersListPage.css */
+.page-title {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .user-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .user-list li {
+    margin-bottom: 5px;
+    font-size: 16px;
+  }
+  
