@@ -33,31 +33,35 @@ const AppRouter: React.FC = () => {
         setIsModalOpen(false);
     };
 
+
+
     return (
 
-  
+
         <Router>
-            <Header />
-            <NavBar />
-            <Routes>
-                <Route path="/welcome" element={<WelcomePage />} />
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/register" element={<UserRegistrationPage />} />
-                <Route path="/auth" element={<UserAuthorizationPage />} />
-                <Route path="/users" element={<PrivateRoute><UsersListPage /></PrivateRoute>} />
-                <Route path="/profile" element={<UserProfilePage />} />
-                <Route path="/companies" element={<PrivateRoute><CompaniesListPage /></PrivateRoute>} />
-                <Route path="/company" element={<CompanyProfilePage />} />
-                <Route path="/api/health" element={<BackendStatus />} />
-            </Routes>
-            <Footer />
-            <button onClick={openModal}>Open Modal</button>
-            <Modal isOpen={isModalOpen} onClose={closeModal}>
-                <h2>Modal Content</h2>
-                <p>This is the content of the modal window.</p>
-            </Modal>
+            
+                <Header />
+                <NavBar />
+                <Routes>
+                    <Route path="/welcome" element={<WelcomePage />} />
+                    <Route path="/about" element={<AboutPage />} />
+                    <Route path="/register" element={<UserRegistrationPage />} />
+                    <Route path="/auth" element={<UserAuthorizationPage />} />
+                    <Route path="/users" element={<PrivateRoute><UsersListPage /></PrivateRoute>} />
+                    <Route path="/profile" element={<UserProfilePage />} />
+                    <Route path="/companies" element={<PrivateRoute><CompaniesListPage /></PrivateRoute>} />
+                    <Route path="/company" element={<CompanyProfilePage />} />
+                    <Route path="/api/health" element={<BackendStatus />} />
+                </Routes>
+                <Footer />
+                <button onClick={openModal}>Open Modal</button>
+                <Modal isOpen={isModalOpen} onClose={closeModal}>
+                    <h2>Modal Content</h2>
+                    <p>This is the content of the modal window.</p>
+
+                </Modal>
         </Router>
-        // </Auth0Provider>
+
     );
 };
 

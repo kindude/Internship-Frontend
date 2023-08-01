@@ -8,6 +8,7 @@ import axios from "axios";
 import '../styles/registerPage.css';
 import commonValidation from "../components/validation/validationPassword";
 import { useNavigate } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 
 
 interface FormValues {
@@ -23,6 +24,8 @@ interface FormValues {
 };
 
 const UserRegistrationPage: React.FC = () => {
+  const { loginWithRedirect, isAuthenticated, getAccessTokenSilently, user } = useAuth0();
+
 
   const initialValues: FormValues = {
     username: "",
@@ -52,6 +55,8 @@ const UserRegistrationPage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleFormSubmit = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
+    
+    
     console.log("Form submitted");
     const { username, email, password, city, country, phone, status, roles } = values;
 
@@ -88,6 +93,63 @@ const UserRegistrationPage: React.FC = () => {
     }
 
   };
+
+
+  const callBackendApi = async (token: string) => {
+
+    console.log()
+
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+  
+      const response = await axios.post("http://localhost:8000/me", {}, config);
+      console.log("Backend Response:", response.data);
+    } catch (error) {
+      console.error("Error during backend API call:", error);
+    }
+  };
+  
+
+  
+  const handleFormSubmitAuth0 = async () => {
+    try {
+      await loginWithRedirect();
+      console.log('User is authenticated.');
+
+      if (isAuthenticated) {
+        const accessToken = await getAccessTokenSilently({
+          authorizationParams: {
+            audience: `https://auth-reg`,
+          },
+        });
+        console.log(user);
+        if (accessToken) {
+          console.log(accessToken);
+        } else {
+          console.error('Access token is undefined or null.');
+        }
+
+        localStorage.setItem('accessToken', accessToken);
+
+        console.log(accessToken);
+
+        const userRep = callBackendApi(accessToken);
+
+        localStorage.setItem('user', JSON.stringify(userRep));
+
+      }
+      else{
+        console.log("@");
+      }
+    } catch (error) {
+      console.error("Error during Auth0 login:", error);
+    }
+  };
+
 
   return (
     <Formik
@@ -163,6 +225,7 @@ const UserRegistrationPage: React.FC = () => {
           </div>
           
           <Button text="Register" type="submit" />
+          <Button type="submit" text="Log In with Auth0"  onClick={handleFormSubmitAuth0}/>
         </Form>
       )}
     </Formik>

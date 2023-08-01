@@ -16,8 +16,8 @@ type PrivateRouteProps = RouteProps & {
 };
 
 export const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
-//     const token = localStorage.getItem("token") ?? "";
+//   const token = localStorage.getItem("token") ?? "";
 //   const isTokenValid = decodeAndVerifyToken(token);
-const isTokenValid =true;
+const isTokenValid =false;
   return isTokenValid ? <>{children}</> : <p>Access Denied</p>;
 };
