@@ -13,7 +13,6 @@ import Modal from "./components/modal/Modal";
 import CompanyProfilePage from "./pages/CompanyProfile";
 import NavBar from "./components/layout/Navbar";
 import axiosInstance from "./api/api_instance";
-import { servicesVersion } from "typescript";
 import { checkBackendHealth } from "./api/api_instance";
 import BackendStatus from "./components/layout/BackendStatus";
 import { PrivateRoute } from "./types/types";
@@ -36,10 +35,7 @@ const AppRouter: React.FC = () => {
 
 
     return (
-
-
         <Router>
-            
                 <Header />
                 <NavBar />
                 <Routes>
@@ -54,12 +50,12 @@ const AppRouter: React.FC = () => {
                     <Route path="/api/health" element={<BackendStatus />} />
                 </Routes>
                 <Footer />
-                <button onClick={openModal}>Open Modal</button>
+                {/* <button onClick={openModal}>Open Modal</button>
                 <Modal isOpen={isModalOpen} onClose={closeModal}>
                     <h2>Modal Content</h2>
                     <p>This is the content of the modal window.</p>
 
-                </Modal>
+                </Modal> */}
         </Router>
 
     );

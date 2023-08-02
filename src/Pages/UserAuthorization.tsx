@@ -1,18 +1,16 @@
-import React, {useEffect} from "react";
+
+import React, { useEffect, useState, useRef } from "react";
+import { Formik, Form, ErrorMessage, FormikHelpers, FormikProps } from "formik";
 import Input from "../components/layout/Input";
 import Button from "../components/layout/Button";
 import emailValidation from "../components/validation/validationEmail";
-import { Formik, Form, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { updateEmail, updateUsername } from "../reducers/slice";
-
 import { useNavigate } from "react-router-dom";
-
+import axiosInstance from "../api/api_instance";
 import '../styles/userAuthorization.css'
-import commonValidation from "../components/validation/validationPassword";
-
+import callBackendApi from "../api/backend_me";
 import { useAuth0 } from "@auth0/auth0-react";
 
 interface FormValues {
@@ -20,29 +18,37 @@ interface FormValues {
   password: string;
 }
 
+
+
 const UserAuthorizationPage: React.FC = () => {
+
+  const { loginWithRedirect, isAuthenticated, getAccessTokenSilently, user } = useAuth0();
+
   const initialValues: FormValues = {
     email: "",
     password: "",
   };
 
+  const [formData, setFormData] = useState<FormValues>({
+    email: "",
+    password: "",
+  });
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { loginWithRedirect, isAuthenticated, getAccessTokenSilently, user } = useAuth0();
-
   
+  const formikRef = useRef<FormikProps<FormValues>>(null); // Create a ref for Formik
+
   const handleFormSubmit = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
     try {
-      const response = await axios.post<string>(
-        "http://localhost:8000/users/login",
-        {
-          email: values.email,
-          password: values.password,
-        }
-      );
+
+      const response = await axiosInstance.post("/users/login", values);
       console.log(response.data);
-      callBackendApi(response.data);
+
+      const userRep = await callBackendApi(response.data);
+      localStorage.setItem("user", JSON.stringify(userRep));
+
       dispatch(updateEmail(values.email));
       dispatch(updateUsername(values.email));
       navigate("/welcome");
@@ -53,27 +59,14 @@ const UserAuthorizationPage: React.FC = () => {
     }
   };
 
-
-  const callBackendApi = async (token: string) => {
-
-    console.log()
-
-    try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-  
-      const response = await axios.post("http://localhost:8000/me", {}, config);
-      console.log("Backend Response:", response.data);
-    } catch (error) {
-      console.error("Error during backend API call:", error);
+  useEffect(() => {
+    // Access the formik instance through the ref
+    if (formikRef.current && formikRef.current.submitCount > 0) {
+      handleFormSubmit(formData, formikRef.current);
     }
-  };
-  
+  }, [formData, navigate, dispatch]);
 
-  
+
   const handleFormSubmitAuth0 = async () => {
     try {
       await loginWithRedirect();
@@ -83,67 +76,32 @@ const UserAuthorizationPage: React.FC = () => {
         const accessToken = await getAccessTokenSilently({
           authorizationParams: {
             audience: `https://auth-reg`,
-
-
           },
         });
         console.log(user);
         if (accessToken) {
           console.log(accessToken);
+          const userRep = await callBackendApi(accessToken);
+
+          localStorage.setItem('accessToken', accessToken);
+          localStorage.setItem('user', JSON.stringify(userRep));
+
+          dispatch(updateEmail(userRep.username || ""));
+          dispatch(updateUsername(userRep.email || ""));
+          navigate("/welcome");
 
         } else {
           console.error('Access token is undefined or null.');
         }
-        
-        localStorage.setItem('accessToken', accessToken);
-
-        console.log(accessToken);
-
-        const userRep = callBackendApi(accessToken);
-
-        localStorage.setItem('user', JSON.stringify(userRep));
 
       }
-      else{
+      else {
         console.log("No token returned");
       }
     } catch (error) {
       console.error("Error during Auth0 login:", error);
     }
   };
-
-
-
-  // const handleFormSubmitAuth0 = async () => {
-  //   try {
-  //     await loginWithRedirect();
-  //     console.log('User is authenticated.');
-  //   } catch (error) {
-  //     console.error("Error during Auth0 login:", error);
-  //   }
-  // };
-  
-  // useEffect(() => {
-  //   if (isAuthenticated) {
-  //     console.log('User is authenticated.');
-  //     const fetchData = async () => {
-  //       try {
-  //         const accessToken = await getAccessTokenSilently();
-  //         console.log("Access Token:", accessToken);
-  
-  //         callBackendApi(accessToken);
-  //       } catch (error) {
-  //         console.error("Error fetching access token:", error);
-  //       }
-  //     };
-  
-  //     fetchData();
-  //   } else {
-  //     console.log("User is not authenticated.");
-  //   }
-  // }, [isAuthenticated]);
-
-
 
 
   return (

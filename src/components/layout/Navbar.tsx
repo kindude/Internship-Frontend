@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from 'react-router-dom';
 
 import '../../styles/navbar.css';
+import Button from "./Button";
+import LogoutButton from "./LogoutButton";
 
 const NavBar: React.FC = () => {
     return (
@@ -27,6 +29,9 @@ const NavBar: React.FC = () => {
                     <Link to="/register">Register</Link>
                 </li>
 
+                <li>
+                    <LogoutButton className="navbar-button" text="Logout" type="submit"/>
+                </li>
             </ul>
 
 
