@@ -11,7 +11,7 @@ const CompaniesListPage: React.FC = () => {
 
     return (
         <div>
-            <h1>Users List</h1>
+            <h1>Companies List</h1>
             <ul>
                 {
                     companies.map(company => (
