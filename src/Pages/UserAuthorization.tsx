@@ -44,13 +44,12 @@ const UserAuthorizationPage: React.FC = () => {
     try {
 
       const response = await axiosInstance.post("/users/login", values);
-      console.log(response.data);
 
       const userRep = await callBackendApi(response.data);
-      localStorage.setItem("user", JSON.stringify(userRep));
 
-      dispatch(updateEmail(values.email));
-      dispatch(updateUsername(values.email));
+      localStorage.setItem('accessToken', response.data);
+      dispatch(updateEmail(userRep.username));
+      dispatch(updateUsername(userRep.email));
       navigate("/welcome");
     } catch (error) {
       console.error("Error during login:", error);
@@ -84,7 +83,6 @@ const UserAuthorizationPage: React.FC = () => {
           const userRep = await callBackendApi(accessToken);
 
           localStorage.setItem('accessToken', accessToken);
-          localStorage.setItem('user', JSON.stringify(userRep));
 
           dispatch(updateEmail(userRep.username || ""));
           dispatch(updateUsername(userRep.email || ""));
