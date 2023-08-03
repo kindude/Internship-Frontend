@@ -9,12 +9,20 @@ const Header: React.FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      const userObj = JSON.parse(userData);
-      dispatch(updateUsername(userObj.username || ""));
-      dispatch(updateEmail(userObj.email || ""));
-    }
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (token) {
+          const userRep = await callBackendApi(token);
+          dispatch(updateUsername(userRep.username || ""));
+          dispatch(updateEmail(userRep.email || ""));
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchData();
   }, [dispatch]);
 
 
