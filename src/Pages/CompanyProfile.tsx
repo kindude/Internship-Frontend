@@ -7,7 +7,6 @@ const CompanyProfilePage: React.FC = () => {
             <Input htmlFor="name" text="Name:" type="text" id="name" name="name" accept="*/*"></Input>
             <Input htmlFor="location" text="Location:" type="text" id="location" name="location" accept="*/*"></Input>
 
-
         </div> 
 
     );

@@ -10,8 +10,6 @@ const UserProfilePage: React.FC = () => {
             <Input htmlFor="photo" text="Photo:" type="file" id="photo" name="email" accept="image/*"></Input>
         </div>
 
-
-
     );
 };
 
