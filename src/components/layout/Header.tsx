@@ -1,11 +1,13 @@
+// components/Header.tsx
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../types/types";
-import { updateEmail, updateUsername } from "../../reducers/slice";
+import { updateUser } from "../../reducers/userReducer";
 import callBackendApi from "../../api/backend_me";
+import {User} from "../../types/UserResponse"; // Make sure to import the User type
 
 const Header: React.FC = () => {
-  const user = useSelector((state: RootState) => state.user);
+  const user = useSelector((state: RootState) => state.user.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -14,8 +16,7 @@ const Header: React.FC = () => {
         const token = localStorage.getItem("accessToken");
         if (token) {
           const userRep = await callBackendApi(token);
-          dispatch(updateUsername(userRep.username || ""));
-          dispatch(updateEmail(userRep.email || ""));
+          dispatch(updateUser(userRep));
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -25,12 +26,10 @@ const Header: React.FC = () => {
     fetchData();
   }, [dispatch]);
 
-
-
   return (
     <div>
-      {user.email && <p>Email: {user.email}</p>}
-      {user.username && <p>Username: {user.username}</p>}
+      {user?.id && <p>Email: {user.email}</p>}
+      {user?.username && <p>Username: {user.username}</p>}
     </div>
   );
 };

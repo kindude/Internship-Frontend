@@ -5,7 +5,6 @@ import store  from './store/store';
 import AppRouter from './router';
 import { createRoot } from "react-dom/client";
 import { Auth0Provider } from '@auth0/auth0-react';
-import { updateEmail, updateUsername } from "./reducers/slice";
 
 
 import { useSelector, useDispatch } from "react-redux";
