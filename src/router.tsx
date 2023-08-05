@@ -16,6 +16,8 @@ import axiosInstance from "./api/api_instance";
 import { checkBackendHealth } from "./api/api_instance";
 import BackendStatus from "./components/layout/BackendStatus";
 import { PrivateRoute } from "./types/types";
+import UserPage from "./pages/UserPage";
+import UserUpdatePage from "./pages/UserUpdate";
 
 
 const AppRouter: React.FC = () => {
@@ -48,6 +50,8 @@ const AppRouter: React.FC = () => {
                     <Route path="/companies" element={<PrivateRoute><CompaniesListPage /></PrivateRoute>} />
                     <Route path="/company" element={<CompanyProfilePage />} />
                     <Route path="/api/health" element={<BackendStatus />} />
+                    <Route path="/userPage/:userId" element={<UserPage/>} />
+                    <Route path="/users/update/:userId" element={<UserUpdatePage/>} />
                 </Routes>
                 <Footer />
                 {/* <button onClick={openModal}>Open Modal</button>

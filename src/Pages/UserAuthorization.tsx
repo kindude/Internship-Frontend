@@ -6,7 +6,7 @@ import Button from "../components/layout/Button";
 import emailValidation from "../components/validation/validationEmail";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
-import { updateEmail, updateUsername } from "../reducers/slice";
+import { updateUser } from "../reducers/userReducer";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../api/api_instance";
 import '../styles/userAuthorization.css'
@@ -49,8 +49,7 @@ const UserAuthorizationPage: React.FC = () => {
       const userRep = await callBackendApi(response.data);
 
       localStorage.setItem('accessToken', response.data);
-      dispatch(updateEmail(userRep.username));
-      dispatch(updateUsername(userRep.email));
+      dispatch(updateUser(userRep));
       navigate("/welcome");
     } catch (error) {
       console.error("Error during login:", error);
@@ -85,8 +84,7 @@ const UserAuthorizationPage: React.FC = () => {
 
           localStorage.setItem('accessToken', accessToken);
 
-          dispatch(updateEmail(userRep.username || ""));
-          dispatch(updateUsername(userRep.email || ""));
+          dispatch(updateUser(userRep));
           navigate("/welcome");
 
         } else {

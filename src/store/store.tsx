@@ -1,13 +1,13 @@
-// src/store.ts
 import { configureStore } from "@reduxjs/toolkit";
-import stringReducer from "../reducers/slice"
+import userReducer from "../reducers/userReducer"; 
+import usersReducer from "../reducers/userReducer"; 
 import { RootState } from "../types/types";
-
 
 const store = configureStore({
   reducer: {
-    user: stringReducer, // Update this with the correct reducer name
-    // Add other reducers as needed
+    user: userReducer,
+    users: usersReducer,
+
   },
 });
 
