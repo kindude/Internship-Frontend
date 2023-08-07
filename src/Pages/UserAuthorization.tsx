@@ -30,7 +30,7 @@ const UserAuthorizationPage: React.FC = () => {
     password: "",
   };
 
-  const [formData, setFormData] = useState<FormValues>({
+  const [formValues, setFormValues] = useState<FormValues>({
     email: "",
     password: "",
   });
@@ -45,7 +45,8 @@ const UserAuthorizationPage: React.FC = () => {
     try {
 
       const response = await axiosInstance.post("/users/login", values);
-
+      console.log(response.data);
+      console.log(values);
       const userRep = await callBackendApi(response.data);
 
       localStorage.setItem('accessToken', response.data);
@@ -58,12 +59,21 @@ const UserAuthorizationPage: React.FC = () => {
     }
   };
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = event.target;
+    console.log(value);
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: type === "checkbox" ? checked : checked,
+    }));
+  };
+
   useEffect(() => {
     // Access the formik instance through the ref
     if (formikRef.current && formikRef.current.submitCount > 0) {
-      handleFormSubmit(formData, formikRef.current);
+      handleFormSubmit(formValues, formikRef.current);
     }
-  }, [formData, navigate, dispatch]);
+  }, [formValues, navigate, dispatch]);
 
 
   const handleFormSubmitAuth0 = async () => {
@@ -83,6 +93,7 @@ const UserAuthorizationPage: React.FC = () => {
           const userRep = await callBackendApi(accessToken);
 
           localStorage.setItem('accessToken', accessToken);
+          
 
           dispatch(updateUser(userRep));
           navigate("/welcome");
@@ -100,10 +111,9 @@ const UserAuthorizationPage: React.FC = () => {
     }
   };
 
-  // const { handleLogin } = useAuth0Login();
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={formValues}
       validationSchema={Yup.object().shape({
         ...emailValidation.fields,
       })}
@@ -119,6 +129,7 @@ const UserAuthorizationPage: React.FC = () => {
               id="email"
               name="email"
               accept="*/*"
+              onChange={handleChange}
             />
             <ErrorMessage name="email" className="error-message" />
           </div>
@@ -131,6 +142,7 @@ const UserAuthorizationPage: React.FC = () => {
               id="password"
               name="password"
               accept="*/*"
+              onChange={handleChange}
             />
             <ErrorMessage name="password" className="error-message" />
           </div>

@@ -45,7 +45,7 @@ const UserUpdatePage: React.FC = () => {
           password: values.password,
         };
   
-        const response = await axiosInstance.put(`/users/${userId}`, updatedUser, {
+        const response = await axiosInstance.put(`/users/update/${userId}`, updatedUser, {
           headers: {
             Authorization: `Bearer ${token}`, // Pass the token as a Bearer token
           },
