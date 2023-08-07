@@ -87,9 +87,6 @@ const UserRegistrationPage: React.FC = () => {
 
       localStorage.setItem('accessToken', response.data);
 
-      // dispatch(updateEmail(userRep.username || ""));
-      // dispatch(updateUsername(userRep.email || ""));
-
       navigate("/auth");
 
     } catch (error) {
@@ -102,10 +99,8 @@ const UserRegistrationPage: React.FC = () => {
 
   useEffect(() => {
 
-    if (formikRef.current && formikRef.current.submitCount > 0) {
-      handleFormSubmit(formData, formikRef.current);
-    }
-  }, [formData, navigate, dispatch]);
+
+  }, [navigate, dispatch]);
 
 
   const handleFormSubmitAuth0 = async () => {
@@ -119,8 +114,6 @@ const UserRegistrationPage: React.FC = () => {
             audience: process.env.REACT_APP_API_AUDEINCE,
           },
         });
-        console.log(user);
-        console.log(accessToken);
 
         const userRep = await callBackendApi(accessToken);
 

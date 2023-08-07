@@ -59,10 +59,7 @@ const UserAuthorizationPage: React.FC = () => {
   };
 
   useEffect(() => {
-    // Access the formik instance through the ref
-    if (formikRef.current && formikRef.current.submitCount > 0) {
-      handleFormSubmit(formData, formikRef.current);
-    }
+
   }, [formData, navigate, dispatch]);
 
 
@@ -100,7 +97,7 @@ const UserAuthorizationPage: React.FC = () => {
     }
   };
 
-  // const { handleLogin } = useAuth0Login();
+
   return (
     <Formik
       initialValues={initialValues}
