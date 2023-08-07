@@ -9,11 +9,9 @@ import UserAuthorizationPage from "./pages/UserAuthorization";
 import UsersListPage from "./pages/UsersList";
 import UserProfilePage from "./pages/UserProfile";
 import CompaniesListPage from "./pages/CompaniesList";
-import Modal from "./components/modal/Modal";
 import CompanyProfilePage from "./pages/CompanyProfile";
 import NavBar from "./components/layout/Navbar";
-import axiosInstance from "./api/api_instance";
-import { checkBackendHealth } from "./api/api_instance";
+
 import BackendStatus from "./components/layout/BackendStatus";
 import { PrivateRoute } from "./types/types";
 import UserPage from "./pages/UserPage";
@@ -38,9 +36,10 @@ const AppRouter: React.FC = () => {
                     <Route path="/api/health" element={<BackendStatus />} />
                     <Route path="/userPage/:userId" element={<UserPage/>} />
                     <Route path="/users/update/:userId" element={<UserUpdatePage/>} />
+                    <Route path="/companyPage/:companyId" element={<CompanyProfilePage/>} />
                 </Routes>
                 <Footer />
-
+              
         </Router>
 
     );

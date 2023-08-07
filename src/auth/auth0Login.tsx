@@ -18,9 +18,8 @@ const useAuth0Login = () => {
             audience: `https://auth-reg`,
           },
         });
-        console.log(user);
+
         if (accessToken) {
-          console.log(accessToken);
           const userRep = await callBackendApi(accessToken);
 
           localStorage.setItem('accessToken', accessToken);

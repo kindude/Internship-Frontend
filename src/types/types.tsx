@@ -1,7 +1,9 @@
 
 import { UserState } from "../reducers/userReducer"; 
 import { RouteProps } from "react-router-dom";
+import { useSelector } from 'react-redux';
 import React, { useState, useEffect,ReactNode } from 'react';
+
 
 
 export interface RootState {
@@ -13,12 +15,13 @@ type PrivateRouteProps = RouteProps & {
   children: ReactNode;
 };
 
+
 export const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
-  const user = localStorage.getItem("user") ?? "";
+  const user = useSelector((state: RootState) => state.user.user);
   const [access, setAccess] = useState(false); // Initialize access state as false
 
   useEffect(() => {
-    if (user !== "") {
+    if (user !== undefined) {
       setAccess(true);
     } else {
       setAccess(false);

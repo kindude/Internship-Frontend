@@ -1,31 +1,28 @@
-import { Navigate, useParams} from 'react-router-dom';
-import {User} from '../types/UserResponse';
-import React, { useEffect, useState, useRef } from "react";
+import { Navigate, useParams } from 'react-router-dom';
+import { User } from '../types/UserResponse';
+import React, { useEffect, useState } from "react";
 import axiosInstance from "../api/api_instance";
 import { useNavigate } from "react-router-dom";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
-
+const validationSchema = Yup.object().shape({
+  username: Yup.string().required("Username is required"),
+  password: Yup.string().required("Password is required"),
+});
 
 const UserUpdatePage: React.FC = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
   const [user, setUser] = useState<User>();
-  const [formData, setFormData] = useState({
-    // Add other fields you want to edit
-    username: "",
-    email: "",
-    // Add more fields as needed
-  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const response = await axiosInstance.get<User>(`/users/${userId}`);
         setUser(response.data);
-        setFormData({
-          username: response.data.username,
-          email: response.data.email,
-        });
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -33,74 +30,76 @@ const UserUpdatePage: React.FC = () => {
 
     fetchUser();
   }, [userId]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const token = localStorage.getItem('accessToken');
-      if (!token) {
-        console.error('Access token not found. Please log in.');
-        return;
+  
+    const handleSubmit = async (values: { username: string; password: string }) => {
+      try {
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+          console.error('Access token not found. Please log in.');
+          return;
+        }
+  
+        const updatedUser = {
+          ...user,
+          username: values.username,
+          password: values.password,
+        };
+  
+        const response = await axiosInstance.put(`/users/update/${userId}`, updatedUser, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Pass the token as a Bearer token
+          },
+        });
+  
+        // Check the response and handle accordingly
+        if (response.status === 200) {
+          navigate(`/users/${userId}`);
+        } else {
+          console.error('Error updating user:', response.data);
+        }
+      } catch (error) {
+        console.error('Error updating user:', error);
       }
+    };
+  
+    return (
+      <div>
+        {loading ? (
+          <p>Loading user data...</p>
+        ) : (
+          <div>
+            <h1>User ID: {user?.id || ""}</h1>
+            <Formik
+              initialValues={{ username: user?.username || "", password: "" }}
+              validationSchema={validationSchema}
+              onSubmit={handleSubmit}
+            >
+              {({ errors, touched }) => (
+                <Form>
+                  <div>
+                    <label>Username:</label>
+                    <Field type="text" name="username" />
+                    <ErrorMessage name="username" component="div" />
+                  </div>
+                  <div>
+                    <label>Email:</label>
+                    <input type="email" value={user?.email || ""} readOnly />
+                  </div>
+                  {/* Add other input fields for additional information, password, avatar, etc. */}
+                  <div>
+                    <label>Password:</label>
+                    <Field type="password" name="password" />
+                    <ErrorMessage name="password" component="div" />
+                  </div>
+                  <button type="submit">Update</button>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        )}
+      </div>
+    );
 
-      const response = await axiosInstance.put(`/users/${userId}`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Pass the token as a Bearer token
-        },
-      });
-
-      // Check the response and handle accordingly
-      if (response.status === 200) {
-        navigate(`/users/${userId}`);
-      } else {
-        console.error('Error updating user:', response.data);
-      }
-    } catch (error) {
-      console.error('Error updating user:', error);
-    }
-  };
-
-  return (
-    <div>
-      {user ? (
-        <div>
-          <h1>User ID: {user.id || ""}</h1>
-          <form onSubmit={handleSubmit}>
-            <div>
-              <label>Username:</label>
-              <input
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label>Email:</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-              />
-            </div>
-            {/* Add other input fields for additional information, password, avatar, etc. */}
-            <button type="submit">Update</button>
-          </form>
-        </div>
-      ) : (
-        <p>Loading user data...</p>
-      )}
-    </div>
-  );
 };
-
-export default UserUpdatePage;
+  export default UserUpdatePage;
+  
