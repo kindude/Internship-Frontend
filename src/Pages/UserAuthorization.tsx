@@ -26,7 +26,7 @@ const UserAuthorizationPage: React.FC = () => {
     password: "",
   };
 
-  const [formData, setFormData] = useState<FormValues>({
+  const [formValues, setFormValues] = useState<FormValues>({
     email: "",
     password: "",
   });
@@ -48,11 +48,17 @@ const UserAuthorizationPage: React.FC = () => {
     }
   };
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = event.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: type === "checkbox" ? checked : checked,
+    }));
+  };
+
   useEffect(() => {
-    if (formData.email && formData.password) {
-      handleFormSubmit(formData, {} as FormikHelpers<FormValues>);
-    }
-  }, [formData, navigate, dispatch]);
+  
+  }, [formValues, navigate, dispatch]);
 
 
   const handleFormSubmitAuth0 = async () => {
@@ -69,6 +75,7 @@ const UserAuthorizationPage: React.FC = () => {
         if (accessToken) {
           const userRep = await callBackendApi(accessToken);
           localStorage.setItem('accessToken', accessToken);
+          
 
 
           dispatch(updateUser(userRep));
@@ -84,10 +91,9 @@ const UserAuthorizationPage: React.FC = () => {
     }
   };
 
-
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={formValues}
       validationSchema={Yup.object().shape({
         ...emailValidation.fields,
       })}
@@ -103,7 +109,7 @@ const UserAuthorizationPage: React.FC = () => {
               id="email"
               name="email"
               accept="*/*"
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) => setFormValues({ ...formValues, email: e.target.value })}
             />
             <ErrorMessage name="email" className="error-message" />
           </div>
@@ -116,12 +122,12 @@ const UserAuthorizationPage: React.FC = () => {
               id="password"
               name="password"
               accept="*/*"
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              onChange={(e) => setFormValues({ ...formValues, password: e.target.value })}
             />
             <ErrorMessage name="password" className="error-message" />
           </div>
 
-          <Button text="Log In" type="submit" onClick={() => handleFormSubmit(formData, {} as FormikHelpers<FormValues>)} />
+          <Button text="Log In" type="submit" onClick={() => handleFormSubmit(formValues, {} as FormikHelpers<FormValues>)} />
           <Button type="button" text="Log In with Auth0" onClick={handleFormSubmitAuth0} />
         </Form>
       )}
