@@ -32,14 +32,14 @@ const UsersListPage: React.FC = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const response= await get_users(pagination.page, pagination.per_page);
+      const response = await get_users(pagination.page, pagination.per_page);
       setUsers(response?.users);
       setPagination((prevPagination) => ({
         ...prevPagination,
         page: response?.page ?? prevPagination.page,
         per_page: response?.per_page ?? prevPagination.per_page,
-        total: response?.total ?? prevPagination.total, 
-        total_pages: response?.total_pages ?? prevPagination.total_pages, 
+        total: response?.total ?? prevPagination.total,
+        total_pages: response?.total_pages ?? prevPagination.total_pages,
       }));
      
     };
@@ -47,17 +47,21 @@ const UsersListPage: React.FC = () => {
     fetchUsers();
   }, [pagination.page, pagination.per_page]);
 
-  const handlePrevPage = async () => {
+  const handlePrevPage = () => {
     if (pagination.page > 1) {
-      const prevPage = pagination.page - 1;
-      await get_users(prevPage, pagination.per_page);
+      setPagination((prevPagination) => ({
+        ...prevPagination,
+        page: prevPagination.page - 1,
+      }));
     }
   };
-  
-  const handleNextPage = async () => {
+
+  const handleNextPage = () => {
     if (pagination.page < pagination.total_pages) {
-      const nextPage = pagination.page + 1;
-      await get_users(nextPage, pagination.per_page);
+      setPagination((prevPagination) => ({
+        ...prevPagination,
+        page: prevPagination.page + 1,
+      }));
     }
   };
 

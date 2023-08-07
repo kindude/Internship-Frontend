@@ -19,7 +19,7 @@ interface FormValues {
 
 const UserAuthorizationPage: React.FC = () => {
 
-  const { loginWithRedirect, isAuthenticated, getAccessTokenSilently, user } = useAuth0();
+  const { loginWithPopup, isAuthenticated, getAccessTokenSilently, user } = useAuth0();
 
   const [formValues, setFormValues] = useState<FormValues>({
     email: "",
@@ -58,7 +58,7 @@ const UserAuthorizationPage: React.FC = () => {
 
   const handleFormSubmitAuth0 = async () => {
     try {
-      await loginWithRedirect();
+      await loginWithPopup();
       console.log('User is authenticated.');
 
       if (isAuthenticated) {
@@ -86,9 +86,6 @@ const UserAuthorizationPage: React.FC = () => {
   return (
     <Formik
       initialValues={formValues}
-      validationSchema={Yup.object().shape({
-        ...emailValidation.fields,
-      })}
       onSubmit={() => {}}
     >
       {formik => (

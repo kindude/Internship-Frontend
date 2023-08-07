@@ -61,7 +61,9 @@ const UserPage: React.FC = () => {
             <h1>User ID: {user.id}</h1>
             <p>Username: {user.username}</p>
             <p>Email: {user.email}</p>
-            {/* Display other user information as needed */}
+            <p>City: {user.city}</p>
+            <p>Country: {user.country}</p>
+            <p>Phone: {user.phone}</p>
             <Button text="Edit" type="submit" onClick={handleEdit}/>
             <Button text="Delete" type="submit" onClick={handleDelete}/>
           </div>
