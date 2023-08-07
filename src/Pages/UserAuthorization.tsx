@@ -21,11 +21,6 @@ const UserAuthorizationPage: React.FC = () => {
 
   const { loginWithRedirect, isAuthenticated, getAccessTokenSilently, user } = useAuth0();
 
-  const initialValues: FormValues = {
-    email: "",
-    password: "",
-  };
-
   const [formValues, setFormValues] = useState<FormValues>({
     email: "",
     password: "",

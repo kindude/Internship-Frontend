@@ -22,7 +22,7 @@ export interface FormValues {
 const CompanyProfilePage: React.FC = () => {
 
   const { companyId } = useParams<{ companyId: string }>();
-
+  const user = useSelector((state: RootState) => state.user.user);
   const [company, setCompany] = useState<Company | undefined>();
 
   const [formValues, setFormValues] = useState<FormValues>({
@@ -32,7 +32,7 @@ const CompanyProfilePage: React.FC = () => {
     city: "",
     country: "",
     is_visible: false,
-    owner_id: 0,
+    owner_id: user?.id || 0,
   });
 
   const navigate = useNavigate();
@@ -54,16 +54,16 @@ const CompanyProfilePage: React.FC = () => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = event.target;
+    console.log(value);
     setFormValues((prevValues) => ({
       ...prevValues,
-      [name]: type === "checkbox" ? checked : checked,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
   
 
   const handleFormSubmit = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
-    const token = localStorage.getItem("accessToken");  
-    values = formValues;
+    const token = localStorage.getItem("accessToken");    
     const updated_company = axiosInstance.put(`/companies/update/${companyId}`, values, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -79,7 +79,7 @@ const CompanyProfilePage: React.FC = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      // Add any additional logic you need after the delete operation
+      
       console.log("Company deleted successfully");
     } catch (error) {
       console.error("Error deleting company:", error);
@@ -170,7 +170,7 @@ const CompanyProfilePage: React.FC = () => {
               />
             </div>
             <Button text="Update" type="submit" />
-            <Button text="Delete" type="submit" onClick={handleFormDelete}/>
+            <Button text="Delete" type="button" onClick={handleFormDelete}/>
           </Form>
         )}
       </Formik>

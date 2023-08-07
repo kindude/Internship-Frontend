@@ -3,10 +3,12 @@ import axiosInstance from "../api/api_instance";
 import { Link } from "react-router-dom";
 import {User} from "../types/UserResponse";
 import Button from "../components/layout/Button";
-import { updateUsers } from "../reducers/usersReducer";
-import { useDispatch } from "react-redux";
+import { UserState, updateUsers } from "../reducers/usersReducer";
+import { useDispatch, useSelector } from "react-redux";
 import  "../styles/usersList.css";
-
+import ListUsers from "../components/layout/ListUsers";
+import { get_users } from "../api/get_users";
+import { RootState } from "../types/types";
 
 interface Pagination {
   page: number;
@@ -26,37 +28,20 @@ const UsersListPage: React.FC = () => {
     total_pages:0
   });
 
-  const get_users = async (page: number, per_page: number) => {
-    try {
-      const response = await axiosInstance.get(`/users/all`, {
-        params: {
-          page: page,
-          per_page: per_page,
-        },
-      });
-      if (response.data.users) {
-        setUsers(response.data.users);
-        setPagination((prevPagination) => ({
-          ...prevPagination,
-          page: page,
-          per_page: per_page,
-          total: response.data.total, // Assuming you have 'total' in the response data
-          total_pages: response.data.total_pages, // Assuming you have 'total_pages' in the response data
-        }));
-
-        dispatch(updateUsers(response.data.users))
-
-      } else {
-        console.error("Invalid response data format:", response.data);
-      }
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    }
-  };
+  
 
   useEffect(() => {
     const fetchUsers = async () => {
-      get_users(pagination.page, pagination.per_page);
+      const response= await get_users(pagination.page, pagination.per_page);
+      setUsers(response?.users);
+      setPagination((prevPagination) => ({
+        ...prevPagination,
+        page: response?.page ?? prevPagination.page,
+        per_page: response?.per_page ?? prevPagination.per_page,
+        total: response?.total ?? prevPagination.total, 
+        total_pages: response?.total_pages ?? prevPagination.total_pages, 
+      }));
+     
     };
 
     fetchUsers();
@@ -79,23 +64,7 @@ const UsersListPage: React.FC = () => {
   return (
     <div className="users-list-container">
       <h2>Users List</h2>
-      <ul>
-        {users.map((user) => (
-          <li key={user.id} className="user-item">
-            <div>
-              <Link to={`/userPage/${user.id}`}>{user.id}</Link>
-            </div>
-            <div className="username" >Username: {user.username}</div>
-            <div className="user-email">Email: {user.email}</div>
-            <div>City: {user.city}</div>
-            <div>Country: {user.country}</div>
-            <div>Phone: {user.phone}</div>
-            <div>Status: {user.status ? "Active" : "Inactive"}</div>
-            <div>Roles: {user.roles.join(", ")}</div>
-          </li>
-        ))}
-      </ul>
-
+      <ListUsers list={users}/>
       <div>
         <Button type="button" text="Previous" onClick={handlePrevPage} disabled={pagination.page === 1} />
         <Button type="button" text="Next" onClick={handleNextPage} disabled={pagination.page === pagination.total_pages} />

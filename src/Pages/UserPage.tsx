@@ -39,12 +39,12 @@ const UserPage: React.FC = () => {
         try {
           const response = await axiosInstance.delete(`/users/${user?.id}`, {
             headers: {
-              Authorization: `Bearer ${token}`, // Pass the token as a Bearer token
+              Authorization: `Bearer ${token}`,
             },
           });
-          // Check the response and handle accordingly
+
           if (response.status === 200) {
-            // Redirect to the users list after successful deletion
+
             navigate("/usersList");
           } else {
             console.error("Error deleting user:", response.data);
@@ -58,7 +58,7 @@ const UserPage: React.FC = () => {
       <div>
         {user ? (
           <div>
-            <h1>User ID: {user.id || ""}</h1>
+            <h1>User ID: {user.id}</h1>
             <p>Username: {user.username}</p>
             <p>Email: {user.email}</p>
             {/* Display other user information as needed */}
