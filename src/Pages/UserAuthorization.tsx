@@ -45,8 +45,7 @@ const UserAuthorizationPage: React.FC = () => {
     try {
 
       const response = await axiosInstance.post("/users/login", values);
-      console.log(response.data);
-      console.log(values);
+
       const userRep = await callBackendApi(response.data);
 
       localStorage.setItem('accessToken', response.data);
@@ -61,7 +60,6 @@ const UserAuthorizationPage: React.FC = () => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = event.target;
-    console.log(value);
     setFormValues((prevValues) => ({
       ...prevValues,
       [name]: type === "checkbox" ? checked : checked,

@@ -60,14 +60,10 @@ const CompanyProfilePage: React.FC = () => {
     }));
   };
   
-  useEffect(() => {
-    console.log(formValues);
-  }, [formValues]);
 
   const handleFormSubmit = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
     const token = localStorage.getItem("accessToken");  
     values = formValues;
-    console.log(values);
     const updated_company = axiosInstance.put(`/companies/update/${companyId}`, values, {
       headers: {
         Authorization: `Bearer ${token}`,

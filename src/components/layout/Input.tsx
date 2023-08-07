@@ -17,11 +17,11 @@ interface InputProps {
 
 const Input: React.FC<InputProps> = ({ htmlFor, text, id, name, type, accept, value, checked, onChange, ...rest }) => {
   return (
-    <>
+    <div>
       {type === "checkbox" ? (
         <label htmlFor={htmlFor}>
           {text}
-          <input type="checkbox" id={id} name={name} accept={accept} checked={checked || false} onChange={onChange}  {...rest} />
+          <input type="checkbox" id={id} name={name} accept={accept} checked={checked || false} onChange={onChange} {...rest} />
         </label>
       ) : (
         <div>
@@ -29,7 +29,7 @@ const Input: React.FC<InputProps> = ({ htmlFor, text, id, name, type, accept, va
           <input type={type} id={id} name={name} accept={accept} value={value as string} onChange={onChange} {...rest} />
         </div>
       )}
-    </>
+    </div>
   );
 };
 

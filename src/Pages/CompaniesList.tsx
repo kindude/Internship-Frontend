@@ -61,7 +61,6 @@ const CompaniesListPage: React.FC = () => {
     const handleFormSubmit = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
         closeModal();
         const token = localStorage.getItem('accessToken');
-        console.log(token);
         const createdCompany = await axiosInstance.post("/companies/create", values, {
             headers: {
                 Authorization: `Bearer ${token}`,
