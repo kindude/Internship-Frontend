@@ -13,7 +13,6 @@ import '../styles/userAuthorization.css'
 import callBackendApi from "../api/backend_me";
 import { useAuth0 } from "@auth0/auth0-react";
 
-
 interface FormValues {
   email: string;
   password: string;
@@ -39,7 +38,7 @@ const UserAuthorizationPage: React.FC = () => {
   const navigate = useNavigate();
 
   
-  const formikRef = useRef<FormikProps<FormValues>>(null); // Create a ref for Formik
+  const formikRef = useRef<FormikProps<FormValues>>(null); 
 
   const handleFormSubmit = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
     try {
@@ -60,7 +59,7 @@ const UserAuthorizationPage: React.FC = () => {
   };
 
   useEffect(() => {
-    // Access the formik instance through the ref
+ 
     if (formikRef.current && formikRef.current.submitCount > 0) {
       handleFormSubmit(formData, formikRef.current);
     }
@@ -75,12 +74,11 @@ const UserAuthorizationPage: React.FC = () => {
       if (isAuthenticated) {
         const accessToken = await getAccessTokenSilently({
           authorizationParams: {
-            audience: `https://auth-reg`,
+            audience: process.env.REACT_APP_API_AUDIENCE,
           },
         });
-        console.log(user);
         if (accessToken) {
-          console.log(accessToken);
+      
           const userRep = await callBackendApi(accessToken);
 
           localStorage.setItem('accessToken', accessToken);
@@ -102,7 +100,7 @@ const UserAuthorizationPage: React.FC = () => {
     }
   };
 
-  // const { handleLogin } = useAuth0Login();
+
   return (
     <Formik
       initialValues={initialValues}
