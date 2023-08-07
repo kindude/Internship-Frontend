@@ -14,6 +14,7 @@ type PrivateRouteProps = RouteProps & {
   children: ReactNode;
 };
 
+
 export const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   const user = useSelector((state: RootState) => state.user.user);
   const [access, setAccess] = useState(false); // Initialize access state as false

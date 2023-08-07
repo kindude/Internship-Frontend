@@ -77,7 +77,6 @@ const UserAuthorizationPage: React.FC = () => {
           localStorage.setItem('accessToken', accessToken);
           
 
-
           dispatch(updateUser(userRep));
           navigate("/welcome");
         } else {
