@@ -1,31 +1,29 @@
-import React, { ChangeEvent, FocusEvent } from "react";
-import { useField } from "formik";
+// Input.tsx
+import React from "react";
 
 interface InputProps {
   htmlFor: string;
   text: string;
+  type: string;
   id: string;
   name: string;
-  type: string;
-  accept?: string;
+  accept: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; // Add the onChange prop
 }
 
-const Input: React.FC<InputProps> = ({ htmlFor, text, id, name, type, accept }) => {
-  const [field, meta] = useField(name);
-
+const Input: React.FC<InputProps> = ({
+  htmlFor,
+  text,
+  type,
+  id,
+  name,
+  accept,
+  onChange, // Make sure to include it in the destructuring
+}) => {
   return (
     <div>
       <label htmlFor={htmlFor}>{text}</label>
-      <input
-        type={type}
-        id={id}
-        name={name}
-        required
-        accept={accept}
-        onChange={field.onChange}
-        onBlur={field.onBlur}
-        value={field.value}
-      />
+      <input type={type} id={id} name={name} accept={accept} onChange={onChange} />
     </div>
   );
 };

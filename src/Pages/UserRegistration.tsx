@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect } from "react";
 import Input from "../components/layout/Input";
 import Button from "../components/layout/Button";
 import { Formik, Form, ErrorMessage, FormikHelpers, FormikProps } from "formik";
@@ -13,7 +13,6 @@ import axiosInstance from "../api/api_instance";
 import callBackendApi from "../api/backend_me";
 import { useDispatch } from "react-redux";
 
-
 interface FormValues {
   username: string;
   email: string;
@@ -27,8 +26,9 @@ interface FormValues {
 };
 
 const UserRegistrationPage: React.FC = () => {
-
   const { loginWithPopup, isAuthenticated, getAccessTokenSilently, user } = useAuth0();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const initialValues: FormValues = {
     username: "",
@@ -42,27 +42,7 @@ const UserRegistrationPage: React.FC = () => {
     roles: ["user"],
   };
 
-  const [formData, setFormData] = useState<FormValues>({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    city: "",
-    country: "",
-    phone: "",
-    status: true,
-    roles: ["user"],
-  });
-
-
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const formikRef = useRef<FormikProps<FormValues>>(null);
-
   const handleFormSubmit = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
-
-
     console.log("Form submitted");
     const { username, email, password, city, country, phone, status, roles } = values;
 
@@ -78,12 +58,8 @@ const UserRegistrationPage: React.FC = () => {
     };
 
     try {
-
       const response = await axiosInstance.post('/users/register', requestData);
-
       console.log(response);
-
-     
 
       localStorage.setItem('accessToken', response.data);
 
@@ -91,27 +67,22 @@ const UserRegistrationPage: React.FC = () => {
       // dispatch(updateUsername(userRep.email || ""));
 
       navigate("/auth");
-
     } catch (error) {
       console.error("Error during login:", error);
     } finally {
       formikHelpers.setSubmitting(false);
     }
-    
   };
 
   useEffect(() => {
     // Access the formik instance through the ref
-    if (formikRef.current && formikRef.current.submitCount > 0) {
-      handleFormSubmit(formData, formikRef.current);
-    }
-  }, [formData, navigate, dispatch]);
-
+    // This effect is not needed anymore since we're not using useRef
+  }, [navigate, dispatch]);
 
   const handleFormSubmitAuth0 = async () => {
     try {
       await loginWithPopup();
-      
+
       if (isAuthenticated) {
         console.log('User is authenticated.');
         const accessToken = await getAccessTokenSilently({
@@ -131,17 +102,13 @@ const UserRegistrationPage: React.FC = () => {
         dispatch(updateEmail(userRep.username || ""));
         dispatch(updateUsername(userRep.email || ""));
         navigate("/login");
-
-      }
-      else {
+      } else {
         console.log("User's not authenticated");
       }
     } catch (error) {
       console.error("Error during Auth0 login:", error);
     }
   };
-
-
 
   return (
     <Formik
