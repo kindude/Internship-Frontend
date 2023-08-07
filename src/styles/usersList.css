@@ -16,3 +16,26 @@
     font-size: 16px;
   }
   
+
+  /* styles.css */
+
+/* Container for the Users List */
+.users-list-container {
+  margin: 20px;
+  padding: 20px;
+}
+
+/* Styling for each User Item */
+.user-item {
+  margin-bottom: 15px;
+}
+
+/* Styling for the Username */
+.username {
+  font-weight: bold;
+}
+
+/* Styling for the User Email */
+.user-email {
+  color: #555;
+}

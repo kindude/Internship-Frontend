@@ -1,7 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import callBackendApi from "../api/backend_me";
 import { useDispatch } from "react-redux";
-import { updateEmail, updateUsername } from "../reducers/slice";
+import { updateUser } from "../reducers/userReducer";
 
 const useAuth0Login = () => {
   const { loginWithRedirect, isAuthenticated, getAccessTokenSilently, user } = useAuth0();
@@ -25,8 +25,8 @@ const useAuth0Login = () => {
 
           localStorage.setItem('accessToken', accessToken);
 
-          dispatch(updateEmail(userRep.username || ""));
-          dispatch(updateUsername(userRep.email || ""));
+          dispatch(updateUser(userRep));
+
         } else {
           console.error('Access token is undefined or null.');
         }

@@ -6,14 +6,17 @@ import * as Yup from "yup";
 import '../styles/registerPage.css';
 import commonValidation from "../components/validation/validationPassword";
 import { useNavigate } from "react-router-dom";
-import { updateEmail, updateUsername } from "../reducers/slice";
+import { updateUser } from "../reducers/userReducer";
 import { useAuth0 } from "@auth0/auth0-react";
 import passwordValidation from "../components/validation/validationPassword";
 import axiosInstance from "../api/api_instance";
 import callBackendApi from "../api/backend_me";
 import { useDispatch } from "react-redux";
 
-interface FormValues {
+
+
+export interface FormValues {
+
   username: string;
   email: string;
   password: string;
@@ -75,9 +78,11 @@ const UserRegistrationPage: React.FC = () => {
   };
 
   useEffect(() => {
+
     // Access the formik instance through the ref
     // This effect is not needed anymore since we're not using useRef
   }, [navigate, dispatch]);
+
 
   const handleFormSubmitAuth0 = async () => {
     try {
@@ -99,8 +104,7 @@ const UserRegistrationPage: React.FC = () => {
 
         localStorage.setItem('accessToken', accessToken);
 
-        dispatch(updateEmail(userRep.username || ""));
-        dispatch(updateUsername(userRep.email || ""));
+        dispatch(updateUser(userRep|| ""));
         navigate("/login");
       } else {
         console.log("User's not authenticated");
