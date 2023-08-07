@@ -43,11 +43,11 @@ const UserAuthorizationPage: React.FC = () => {
     }
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = event.target;
+  const handleChange = (fieldName: keyof FormValues) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, type, checked } = event.target;
     setFormValues((prevValues) => ({
       ...prevValues,
-      [name]: type === "checkbox" ? checked : checked,
+      [fieldName]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -70,8 +70,6 @@ const UserAuthorizationPage: React.FC = () => {
         if (accessToken) {
           const userRep = await callBackendApi(accessToken);
           localStorage.setItem('accessToken', accessToken);
-          
-
           dispatch(updateUser(userRep));
           navigate("/welcome");
         } else {
@@ -103,7 +101,8 @@ const UserAuthorizationPage: React.FC = () => {
               id="email"
               name="email"
               accept="*/*"
-              onChange={(e) => setFormValues({ ...formValues, email: e.target.value })}
+              value={formValues.email}
+              onChange={handleChange("email")}
             />
             <ErrorMessage name="email" className="error-message" />
           </div>
@@ -116,12 +115,13 @@ const UserAuthorizationPage: React.FC = () => {
               id="password"
               name="password"
               accept="*/*"
-              onChange={(e) => setFormValues({ ...formValues, password: e.target.value })}
+              value={formValues.password}
+              onChange={handleChange("password")}
             />
             <ErrorMessage name="password" className="error-message" />
           </div>
 
-          <Button text="Log In" type="submit" onClick={() => handleFormSubmit(formValues, {} as FormikHelpers<FormValues>)} />
+          <Button text="Log In" type="submit" onClick={() => handleFormSubmit(formValues, formik)} />
           <Button type="button" text="Log In with Auth0" onClick={handleFormSubmitAuth0} />
         </Form>
       )}
