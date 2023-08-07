@@ -14,7 +14,9 @@ import callBackendApi from "../api/backend_me";
 import { useDispatch } from "react-redux";
 
 
+
 export interface FormValues {
+
   username: string;
   email: string;
   password: string;
@@ -79,6 +81,9 @@ const UserRegistrationPage: React.FC = () => {
     // Access the formik instance through the ref
     // This effect is not needed anymore since we're not using useRef
   }, [navigate, dispatch]);
+
+
+
 
   const handleFormSubmitAuth0 = async () => {
     try {
