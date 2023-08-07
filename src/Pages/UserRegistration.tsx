@@ -63,9 +63,8 @@ const UserRegistrationPage: React.FC = () => {
       console.log(response);
 
       localStorage.setItem('accessToken', response.data);
+      dispatch(updateUser(response.data));
 
-      // dispatch(updateEmail(userRep.username || ""));
-      // dispatch(updateUsername(userRep.email || ""));
 
       navigate("/auth");
     } catch (error) {
@@ -75,10 +74,6 @@ const UserRegistrationPage: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    // Access the formik instance through the ref
-    // This effect is not needed anymore since we're not using useRef
-  }, [navigate, dispatch]);
 
   const handleFormSubmitAuth0 = async () => {
     try {
@@ -96,11 +91,9 @@ const UserRegistrationPage: React.FC = () => {
 
         const userRep = await callBackendApi(accessToken);
 
-        localStorage.setItem('user', JSON.stringify(userRep));
-
         localStorage.setItem('accessToken', accessToken);
 
-        dispatch(updateUser(userRep|| ""));
+        dispatch(updateUser(userRep.data));
         navigate("/login");
       } else {
         console.log("User's not authenticated");

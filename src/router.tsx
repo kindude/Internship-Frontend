@@ -22,19 +22,6 @@ import UserUpdatePage from "./pages/UserUpdate";
 
 const AppRouter: React.FC = () => {
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-
-
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
-
-
 
     return (
         <Router>
@@ -54,12 +41,7 @@ const AppRouter: React.FC = () => {
                     <Route path="/users/update/:userId" element={<UserUpdatePage/>} />
                 </Routes>
                 <Footer />
-                {/* <button onClick={openModal}>Open Modal</button>
-                <Modal isOpen={isModalOpen} onClose={closeModal}>
-                    <h2>Modal Content</h2>
-                    <p>This is the content of the modal window.</p>
-
-                </Modal> */}
+                
         </Router>
 
     );

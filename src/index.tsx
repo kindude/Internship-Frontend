@@ -25,9 +25,9 @@ if (rootElement) {
       clientId={process.env.REACT_APP_CLIENT_ID || ""}
       authorizationParams={{
         redirect_uri: window.location.origin,
-        audience: "https://auth-reg",
+        audience: process.env.REACT_APP_AP_DOMAIN,
       }}
-      // Add any other Auth0 configurations as needed
+
     >
       <Provider store={store}>
         <AppRouter />
