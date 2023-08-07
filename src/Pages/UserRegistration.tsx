@@ -14,7 +14,9 @@ import callBackendApi from "../api/backend_me";
 import { useDispatch } from "react-redux";
 
 
+
 export interface FormValues {
+
   username: string;
   email: string;
   password: string;
@@ -73,6 +75,9 @@ const UserRegistrationPage: React.FC = () => {
       formikHelpers.setSubmitting(false);
     }
   };
+
+
+
 
 
   const handleFormSubmitAuth0 = async () => {
