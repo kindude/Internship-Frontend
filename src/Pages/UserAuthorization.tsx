@@ -1,6 +1,5 @@
-
-import React, { useEffect, useState, useRef } from "react";
-import { Formik, Form, ErrorMessage, FormikHelpers, FormikProps } from "formik";
+import React, { useEffect, useState } from "react";
+import { Formik, Form, ErrorMessage, FormikHelpers } from "formik";
 import Input from "../components/layout/Input";
 import Button from "../components/layout/Button";
 import emailValidation from "../components/validation/validationEmail";
@@ -17,8 +16,6 @@ interface FormValues {
   email: string;
   password: string;
 }
-
-
 
 const UserAuthorizationPage: React.FC = () => {
 
@@ -37,16 +34,10 @@ const UserAuthorizationPage: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  
-  const formikRef = useRef<FormikProps<FormValues>>(null); 
-
   const handleFormSubmit = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
     try {
-
       const response = await axiosInstance.post("/users/login", values);
-
       const userRep = await callBackendApi(response.data);
-
       localStorage.setItem('accessToken', response.data);
       dispatch(updateEmail(userRep.username));
       dispatch(updateUsername(userRep.email));
@@ -59,9 +50,8 @@ const UserAuthorizationPage: React.FC = () => {
   };
 
   useEffect(() => {
- 
-    if (formikRef.current && formikRef.current.submitCount > 0) {
-      handleFormSubmit(formData, formikRef.current);
+    if (formData.email && formData.password) {
+      handleFormSubmit(formData, {} as FormikHelpers<FormValues>);
     }
   }, [formData, navigate, dispatch]);
 
@@ -78,21 +68,15 @@ const UserAuthorizationPage: React.FC = () => {
           },
         });
         if (accessToken) {
-      
           const userRep = await callBackendApi(accessToken);
-
           localStorage.setItem('accessToken', accessToken);
-
           dispatch(updateEmail(userRep.username || ""));
           dispatch(updateUsername(userRep.email || ""));
           navigate("/welcome");
-
         } else {
           console.error('Access token is undefined or null.');
         }
-
-      }
-      else {
+      } else {
         console.log("No token returned");
       }
     } catch (error) {
@@ -107,7 +91,7 @@ const UserAuthorizationPage: React.FC = () => {
       validationSchema={Yup.object().shape({
         ...emailValidation.fields,
       })}
-      onSubmit={handleFormSubmit}
+      onSubmit={() => {}}
     >
       {formik => (
         <Form className="user-auth-form">
@@ -119,6 +103,7 @@ const UserAuthorizationPage: React.FC = () => {
               id="email"
               name="email"
               accept="*/*"
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             />
             <ErrorMessage name="email" className="error-message" />
           </div>
@@ -131,11 +116,12 @@ const UserAuthorizationPage: React.FC = () => {
               id="password"
               name="password"
               accept="*/*"
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
             />
             <ErrorMessage name="password" className="error-message" />
           </div>
 
-          <Button text="Log In" type="submit" />
+          <Button text="Log In" type="submit" onClick={() => handleFormSubmit(formData, {} as FormikHelpers<FormValues>)} />
           <Button type="button" text="Log In with Auth0" onClick={handleFormSubmitAuth0} />
         </Form>
       )}
