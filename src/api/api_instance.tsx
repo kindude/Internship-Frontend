@@ -2,12 +2,10 @@ import axios, { AxiosInstance } from 'axios';
 import React, { useState, useEffect } from "react";
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: process.env.BASE_URL,
+  baseURL: process.env.REACT_APP_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-
-
 
 });
 
