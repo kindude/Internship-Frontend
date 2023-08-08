@@ -54,7 +54,7 @@ const CompanyProfilePage: React.FC = () => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = event.target;
-    console.log(value);
+
     setFormValues((prevValues) => ({
       ...prevValues,
       [name]: type === "checkbox" ? checked : value,
@@ -64,6 +64,8 @@ const CompanyProfilePage: React.FC = () => {
 
   const handleFormSubmit = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
     const token = localStorage.getItem("accessToken");    
+    values = formValues;
+    console.log(values);
     const updated_company = axiosInstance.put(`/companies/update/${companyId}`, values, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -74,17 +76,23 @@ const CompanyProfilePage: React.FC = () => {
   const handleFormDelete = async () => {
     try {
       const token = localStorage.getItem("accessToken");
-      const deleted_company = await axiosInstance.delete(`/companies/${companyId}`, {
+      console.log(token);
+      const response = await axiosInstance.delete(`/companies/${companyId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      
-      console.log("Company deleted successfully");
+  
+      if (response.status === 200) {
+        console.log("Company deleted successfully");
+      } else {
+        console.error("Error deleting company:", response.data);
+      }
     } catch (error) {
       console.error("Error deleting company:", error);
     }
   };
+  
 
 
   return (

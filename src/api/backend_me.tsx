@@ -9,7 +9,8 @@ const callBackendApi = async (token: string) => {
       };
   
       const response = await axiosInstance.post("/me", {}, config);
-      localStorage.setItem("user", JSON.stringify(response.data));
+    
+
       return response.data; 
     } catch (error) {
       console.error("Error during backend API call:", error);

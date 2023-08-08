@@ -36,6 +36,7 @@ const UserAuthorizationPage: React.FC = () => {
       localStorage.setItem('accessToken', response.data);
       dispatch(updateUser(userRep));
       navigate("/welcome");
+      window.location.reload();
     } catch (error) {
       console.error("Error during login:", error);
     } finally {
@@ -72,6 +73,7 @@ const UserAuthorizationPage: React.FC = () => {
           localStorage.setItem('accessToken', accessToken);
           dispatch(updateUser(userRep));
           navigate("/welcome");
+          window.location.reload();
         } else {
           console.error('Access token is undefined or null.');
         }
