@@ -21,7 +21,6 @@ interface Pagination {
 
 const UsersListPage: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
-  const dispatch = useDispatch();
   const [pagination, setPagination] = useState<Pagination>({
     page: 1,
     per_page: 10,

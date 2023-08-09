@@ -12,6 +12,8 @@ import { Form } from "formik";
 import Button from "../components/layout/Button";
 import { useNavigate } from "react-router-dom";
 import ListCompanies from "../components/layout/ListCompanies";
+import Pagination from "../components/layout/Pagination";
+import { get_companies } from "../api/get_companies";
 
 export interface FormValues {
     name: string;
@@ -23,11 +25,26 @@ export interface FormValues {
     owner_id: number;
 };
 
+interface Pagination {
+    page: number;
+    per_page: number;
+    total: number;
+    total_pages: number;
+
+}
+
 const CompaniesListPage: React.FC = () => {
     const user = useSelector((state: RootState) => state.user.user);
     const [companies, setCompanies] = useState<Company[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
+
+    const [pagination, setPagination] = useState<Pagination>({
+        page: 1,
+        per_page: 5,
+        total: 0,
+        total_pages: 0
+    });
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -45,8 +62,7 @@ const CompaniesListPage: React.FC = () => {
         country: "",
         is_visible: false,
         owner_id: user?.id || 0
-      });
-
+    });
 
 
     const handleFormSubmit = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
@@ -73,28 +89,28 @@ const CompaniesListPage: React.FC = () => {
         }));
     };
 
-    const get_companies = async () => {
-        try {
-            const response = await axiosInstance.get(`/companies/all`);
-            if (response.data.companies) {
-                setCompanies(response.data.companies);
-                console.log(companies);
-
-            } else {
-                console.error("Invalid response data format:", response.data);
-            }
-        } catch (error) {
-            console.error("Error fetching companies:", error);
-        }
-    };
+    const handlePageChange = (pageNumber: number) => {
+        setPagination((prevPagination) => ({
+          ...prevPagination,
+          page: pageNumber,
+        }));
+      };
 
     useEffect(() => {
         const fetchCompanies = async () => {
-            get_companies();
+            const response = await get_companies(pagination.page, pagination.per_page);
+            setCompanies(response?.companies); 
+            setPagination((prevPagination) => ({
+                ...prevPagination,
+                page: response?.page ?? prevPagination.page,
+                per_page: response?.per_page ?? prevPagination.per_page,
+                total: response?.total ?? prevPagination.total,
+                total_pages: response?.total_pages ?? prevPagination.total_pages,
+              }));
         };
 
         fetchCompanies();
-    }, []);
+    }, [pagination.page, pagination.per_page]);
 
 
     return (
@@ -183,12 +199,18 @@ const CompaniesListPage: React.FC = () => {
                                 />
                             </div>
                             <Button text="Create" type="submit" />
+                            <Button text="Cancel" type="button" onClick={closeModal}/>
                         </Form>
                     )}
                 </Formik>
             </Modal>
             <h1>Companies List</h1>
             <ListCompanies list={companies} user={user} />
+            <Pagination
+                totalPages={pagination.total_pages}
+                currentPage={pagination.page}
+                onPageChange={handlePageChange}
+            />
         </div>
     );
 

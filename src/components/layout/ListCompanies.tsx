@@ -1,20 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { User } from "../../types/UserResponse";
+import { Company } from "../../types/CompanyResponse";
 
-interface ListUserItem {
-    id: number;
-    name: string;
-    description: string;
-    site: string;
-    city: string;
-    country: string;
-    is_visible: boolean;
-    owner_id: number;
-}
 
 interface ListUsersProps {
-    list: ListUserItem[];
+    list: Company[];
     user: User | undefined;
 }
 
