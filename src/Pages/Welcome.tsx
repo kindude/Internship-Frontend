@@ -5,10 +5,7 @@ import { RootState } from "../types/types";
 import store from '../store/store';
 
 const WelcomePage: React.FC = () => {
-  const testString = useSelector((state: RootState) => state.user);
-  const dispatch = useDispatch();
-
-
+  
   return (
   
     <div>

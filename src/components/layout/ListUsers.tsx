@@ -1,5 +1,7 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { RootState } from "../../types/types";
 
 interface ListUserItem {
   id: number;
@@ -17,6 +19,8 @@ interface ListUsersProps {
 }
 
 const ListUsers: React.FC<ListUsersProps> = ({ list }) => {
+
+
   return (
     <ul>
       {list.map((item) => (
@@ -34,6 +38,7 @@ const ListUsers: React.FC<ListUsersProps> = ({ list }) => {
         </li>
       ))}
     </ul>
+    
   );
 };
 

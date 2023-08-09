@@ -61,7 +61,6 @@ const UserAuthorizationPage: React.FC = () => {
     try {
       await loginWithPopup();
       console.log('User is authenticated.');
-
       if (isAuthenticated) {
         const accessToken = await getAccessTokenSilently({
           authorizationParams: {

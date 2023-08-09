@@ -25,8 +25,12 @@ const ListCompanies: React.FC<ListUsersProps> = ({ list, user }) => {
                 (user?.id === item.owner_id || item.is_visible) && (
                     <li key={item.id} className="company-item">
                         <div>
+                            {user?.id === item.owner_id && (
+                                <span>✓ </span>
+                            )}
                             <Link to={`/companyPage/${item.id}`}>{item.id}</Link>
                         </div>
+
                         <div>
                             {item.name} {item.description}
                         </div>

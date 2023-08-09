@@ -9,31 +9,13 @@ import Input from "../components/layout/Input";
 import Button from "../components/layout/Button";
 import { useNavigate } from "react-router-dom";
 
-export interface FormValues {
-  name: string;
-  description: string;
-  site: string;
-  city: string;
-  country: string;
-  is_visible: boolean;
-  owner_id: number;
-}
-
 const CompanyProfilePage: React.FC = () => {
 
   const { companyId } = useParams<{ companyId: string }>();
   const user = useSelector((state: RootState) => state.user.user);
   const [company, setCompany] = useState<Company | undefined>();
+  const [error, setError] = useState<string | null>(null);
 
-  const [formValues, setFormValues] = useState<FormValues>({
-    name: "",
-    description: "",
-    site: "",
-    city: "",
-    country: "",
-    is_visible: false,
-    owner_id: user?.id || 0,
-  });
 
   const navigate = useNavigate();
 
@@ -43,146 +25,73 @@ const CompanyProfilePage: React.FC = () => {
       try {
         const response = await axiosInstance.get<Company>(`/companies/${companyId}`);
         setCompany(response.data);
-        setFormValues(response.data);
       } catch (error) {
-        console.error('Error fetching user:', error);
+        setError('Company not found');
+        console.error('Error fetching company:', error);
       }
     };
 
     fetchCompany();
   }, [companyId]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = event.target;
 
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
+  const handleFormUpdate = () => {
+    navigate(`/companies/update/${company?.id}`)
+
+  }
   
-
-  const handleFormSubmit = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
-    const token = localStorage.getItem("accessToken");    
-    values = formValues;
-    console.log(values);
-    const updated_company = axiosInstance.put(`/companies/update/${companyId}`, values, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  };
 
   const handleFormDelete = async () => {
     try {
       const token = localStorage.getItem("accessToken");
       console.log(token);
-      const response = await axiosInstance.delete(`/companies/${companyId}`, {
+
+
+      const response = await axiosInstance.post(`/companies/${companyId}`, company, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       if (response.status === 200) {
         console.log("Company deleted successfully");
+        navigate("/companies");
+        window.location.reload();
       } else {
+        setError('Company not found');
         console.error("Error deleting company:", response.data);
       }
     } catch (error) {
-      console.error("Error deleting company:", error);
+      setError('Company not found');
     }
   };
-  
 
 
-  return (
-    <div>
-      <h2>Company</h2>
-      <Formik
-        initialValues={formValues}
-        onSubmit={handleFormSubmit}
-      >
-        {formik => (
-          <Form className="register-form">
-            <div>
-              <Input
-                htmlFor="name"
-                text="Company Name:"
-                type="text"
-                id="companyName"
-                name="name"
-                accept="*/*"
-                value={formValues.name}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <Input
-                htmlFor="description"
-                text="Description:"
-                type="text"
-                id="description"
-                name="description"
-                accept="*/*"
-                value={formValues.description}
-                onChange={handleChange}
-
-              />
-            </div>
-            <div>
-              <Input
-                htmlFor="site"
-                text="Site:"
-                type="text"
-                id="site"
-                name="site"
-                accept="*/*"
-                value={formValues.site}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <Input
-                htmlFor="city"
-                text="City:"
-                type="text"
-                id="city"
-                name="city"
-                accept="*/*"
-                value={formValues.city}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <Input
-                htmlFor="country"
-                text="Country:"
-                type="text"
-                id="country"
-                name="country"
-                accept="*/*"
-                value={formValues.country}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <Input
-                htmlFor="is_visible"
-                text="Visible"
-                type="checkbox"
-                id="is_visible"
-                name="is_visible"
-                accept="*/*"
-                checked={formValues.is_visible}
-                onChange={handleChange}
-              />
-            </div>
-            <Button text="Update" type="submit" />
-            <Button text="Delete" type="button" onClick={handleFormDelete}/>
-          </Form>
+  return(
+    <div><div>
+    {error ? (
+      <p>{error}</p>
+    ) : company ? (
+      <div>
+        <h1>Company ID: {company.id}</h1>
+        <p>Name: {company.name}</p>
+        <p>Description: {company.description}</p>
+        <p>City: {company.city}</p>
+        <p>Country: {company.country}</p>
+        <p>Site: {company.site}</p>
+        
+        {user && user.id === company?.owner_id && (
+          <Button text="Edit" type="submit" onClick={handleFormUpdate} />
         )}
-      </Formik>
-    </div>
+        {user && user.id === company?.owner_id && (
+          <Button text="Delete" type="submit" onClick={handleFormDelete} />
+        )}
+
+      </div>
+    ) : (
+      <p>Loading user data...</p>
+    )}
+  </div></div>
   );
 };
 

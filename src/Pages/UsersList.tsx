@@ -9,6 +9,7 @@ import  "../styles/usersList.css";
 import ListUsers from "../components/layout/ListUsers";
 import { get_users } from "../api/get_users";
 import { RootState } from "../types/types";
+import Pagination from "../components/layout/Pagination";
 
 interface Pagination {
   page: number;
@@ -47,32 +48,23 @@ const UsersListPage: React.FC = () => {
     fetchUsers();
   }, [pagination.page, pagination.per_page]);
 
-  const handlePrevPage = () => {
-    if (pagination.page > 1) {
-      setPagination((prevPagination) => ({
-        ...prevPagination,
-        page: prevPagination.page - 1,
-      }));
-    }
-  };
 
-  const handleNextPage = () => {
-    if (pagination.page < pagination.total_pages) {
-      setPagination((prevPagination) => ({
-        ...prevPagination,
-        page: prevPagination.page + 1,
-      }));
-    }
+  const handlePageChange = (pageNumber: number) => {
+    setPagination((prevPagination) => ({
+      ...prevPagination,
+      page: pageNumber,
+    }));
   };
 
   return (
     <div className="users-list-container">
       <h2>Users List</h2>
       <ListUsers list={users}/>
-      <div>
-        <Button type="button" text="Previous" onClick={handlePrevPage} disabled={pagination.page === 1} />
-        <Button type="button" text="Next" onClick={handleNextPage} disabled={pagination.page === pagination.total_pages} />
-      </div>
+      <Pagination
+        totalPages={pagination.total_pages}
+        currentPage={pagination.page}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };
