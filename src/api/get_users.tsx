@@ -21,6 +21,7 @@ export const get_users = async (page: number, per_page: number) => {
                 total_pages: response.data.total_pages,
                 users: response.data.users
             };
+            console.log(resp);
 
             return resp;
 

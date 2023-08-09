@@ -12,6 +12,7 @@ import passwordValidation from "../components/validation/validationPassword";
 import axiosInstance from "../api/api_instance";
 import callBackendApi from "../api/backend_me";
 import { useDispatch } from "react-redux";
+import emailValidation from "../components/validation/validationEmail";
 
 export interface FormValues {
   username: string;
@@ -57,8 +58,6 @@ const UserRegistrationPage: React.FC = () => {
   };
 
   const handleFormSubmit = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
-    console.log("Form submitted");
-
     const requestData = {
       username: values.username,
       email: values.email,
@@ -106,7 +105,7 @@ const UserRegistrationPage: React.FC = () => {
         roles: ["user"],
       }}
       validationSchema={Yup.object().shape({
-        ...commonValidation.fields,
+        ...emailValidation.fields,
         ...passwordValidation.fields,
       })}
       onSubmit={handleFormSubmit}

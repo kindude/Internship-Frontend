@@ -7,7 +7,6 @@ import Footer from "./components/layout/Footer";
 import UserRegistrationPage from "./pages/UserRegistration";
 import UserAuthorizationPage from "./pages/UserAuthorization";
 import UsersListPage from "./pages/UsersList";
-import UserProfilePage from "./pages/UserProfile";
 import CompaniesListPage from "./pages/CompaniesList";
 import CompanyProfilePage from "./pages/CompanyProfile";
 import NavBar from "./components/layout/Navbar";
@@ -30,7 +29,6 @@ const AppRouter: React.FC = () => {
                     <Route path="/register" element={<UserRegistrationPage />} />
                     <Route path="/auth" element={<UserAuthorizationPage />} />
                     <Route path="/users" element={<PrivateRoute><UsersListPage /></PrivateRoute>} />
-                    <Route path="/profile" element={<UserProfilePage />} />
                     <Route path="/companies" element={<PrivateRoute><CompaniesListPage /></PrivateRoute>} />
                     <Route path="/company" element={<CompanyProfilePage />} />
                     <Route path="/api/health" element={<BackendStatus />} />
