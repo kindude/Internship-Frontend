@@ -1,0 +1,39 @@
+/* listCompanies.css */
+
+.company-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .company-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .company-item span {
+    font-size: 18px;
+    margin-right: 5px;
+    color: #4caf50; /* Green color for the owner checkmark */
+  }
+  
+  .company-item a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+    transition: color 0.2s ease-in-out;
+  }
+  
+  .company-item a:hover {
+    color: #0056b3;
+  }
+  
+  .company-details {
+    flex: 1;
+    margin-left: 10px;
+    font-size: 16px;
+  }
+  

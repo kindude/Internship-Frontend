@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../types/types';
 import { clearUser } from '../reducers/userReducer';
-
+import "../styles/userPage.css";
 
 
 const UserPage: React.FC = () => {
@@ -68,25 +68,27 @@ const UserPage: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="user-profile-container">
       {error ? (
         <p>{error}</p>
       ) : user ? (
         <div>
-          <h1>User ID: {user.id}</h1>
-          <p>Username: {user.username}</p>
-          <p>Email: {user.email}</p>
-          <p>City: {user.city}</p>
-          <p>Country: {user.country}</p>
-          <p>Phone: {user.phone}</p>
-          
+          <div className="user-profile-header">
+            <h1>User ID: {user.id}</h1>
+            <p>{user.username}</p>
+          </div>
+          <div className="user-profile-details">
+            <p>Email: {user.email}</p>
+            <p>City: {user.city}</p>
+            <p>Country: {user.country}</p>
+            <p>Phone: {user.phone}</p>
+          </div>
           {currentUser && currentUser.id === user.id && (
-            <Button text="Edit" type="submit" onClick={handleEdit} />
+            <div className="user-profile-actions">
+              <Button text="Edit" type="submit" onClick={handleEdit} className="edit" />
+              <Button text="Delete" type="submit" onClick={handleDelete} className="delete" />
+            </div>
           )}
-          {currentUser && currentUser.id === user.id && (
-            <Button text="Delete" type="submit" onClick={handleDelete} />
-          )}
-
         </div>
       ) : (
         <p>Loading user data...</p>

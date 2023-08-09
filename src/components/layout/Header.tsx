@@ -27,9 +27,18 @@ const Header: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <div>
-      {user?.id && <p>Email: {user.email}</p>}
-      {user?.username && <p>Username: {user.username}</p>}
+    <div className="header-container">
+      <div className="header-content">
+        {user?.id && (
+          <div className="user-info">
+            <span className="user-icon">👤</span>
+            <div className="user-details">
+              <div className="username">{user.username}</div>
+              <div className="email">Email: {user.email}</div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

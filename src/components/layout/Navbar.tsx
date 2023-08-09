@@ -7,7 +7,6 @@ import LogoutButton from "./LogoutButton";
 import { useSelector } from 'react-redux';
 import { RootState } from "../../types/types";
 
-
 const NavBar: React.FC = () => {
     const currentUser = useSelector((state: RootState) => state.user.user);
     return (

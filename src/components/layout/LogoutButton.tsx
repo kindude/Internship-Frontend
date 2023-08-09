@@ -14,7 +14,7 @@ const LogoutButton: React.FC<ButtonProps> = ({ onClick, ...rest }) => {
     navigate("/welcome");
   };
 
-  return <Button onClick={handleLogout} {...rest} />;
+  return <Button className="logout-button" onClick={handleLogout} {...rest} />;
 };
 
 export default LogoutButton;

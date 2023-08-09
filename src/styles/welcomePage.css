@@ -1,0 +1,29 @@
+/* welcomePage.css */
+
+.welcome-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+  }
+  
+  .welcome-header {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .welcome-text {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #555;
+  }
+  
+  .welcome-message {
+    font-size: 24px;
+    color: #007bff;
+  }
+  

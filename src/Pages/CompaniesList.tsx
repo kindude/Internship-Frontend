@@ -14,6 +14,8 @@ import { useNavigate } from "react-router-dom";
 import ListCompanies from "../components/layout/ListCompanies";
 import Pagination from "../components/layout/Pagination";
 import { get_companies } from "../api/get_companies";
+import "../styles/companiesList.css";
+
 
 export interface FormValues {
     name: string;
@@ -77,8 +79,24 @@ const CompaniesListPage: React.FC = () => {
         });
 
         navigate("/companies");
+        fetchCompanies();
         window.location.reload();
+        
     }
+        
+    const fetchCompanies = async () => {
+        const response = await get_companies(pagination.page, pagination.per_page);
+        setCompanies(response?.companies); 
+        console.log(response?.companies);
+        setPagination((prevPagination) => ({
+            ...prevPagination,
+            page: response?.page ?? prevPagination.page,
+            per_page: response?.per_page ?? prevPagination.per_page,
+            total: response?.total ?? prevPagination.total,
+            total_pages: response?.total_pages ?? prevPagination.total_pages,
+          }));
+    };
+        
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = event.target;
@@ -97,25 +115,15 @@ const CompaniesListPage: React.FC = () => {
       };
 
     useEffect(() => {
-        const fetchCompanies = async () => {
-            const response = await get_companies(pagination.page, pagination.per_page);
-            setCompanies(response?.companies); 
-            setPagination((prevPagination) => ({
-                ...prevPagination,
-                page: response?.page ?? prevPagination.page,
-                per_page: response?.per_page ?? prevPagination.per_page,
-                total: response?.total ?? prevPagination.total,
-                total_pages: response?.total_pages ?? prevPagination.total_pages,
-              }));
-        };
+        
 
         fetchCompanies();
     }, [pagination.page, pagination.per_page]);
 
 
     return (
-        <div>
-            <button onClick={openModal}>Create Company</button>
+        <div className="page-container">
+           <button className="create-button" onClick={openModal}>Create Company</button>
             <Modal windowName="Company Creation" isOpen={isModalOpen} onClose={closeModal}>
                 <h2>Company</h2>
 
@@ -204,13 +212,15 @@ const CompaniesListPage: React.FC = () => {
                     )}
                 </Formik>
             </Modal>
-            <h1>Companies List</h1>
+            <h1 className="page-header">Companies List</h1>
             <ListCompanies list={companies} user={user} />
-            <Pagination
-                totalPages={pagination.total_pages}
-                currentPage={pagination.page}
-                onPageChange={handlePageChange}
-            />
+            <div className="pagination-container">
+                <Pagination
+                    totalPages={pagination.total_pages}
+                    currentPage={pagination.page}
+                    onPageChange={handlePageChange}
+                />
+            </div>
         </div>
     );
 

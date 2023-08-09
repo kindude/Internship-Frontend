@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { User } from "../../types/UserResponse";
 import { Company } from "../../types/CompanyResponse";
-
+import "../../styles/ListCompanies.css";
 
 interface ListUsersProps {
     list: Company[];
@@ -11,7 +11,7 @@ interface ListUsersProps {
 
 const ListCompanies: React.FC<ListUsersProps> = ({ list, user }) => {
     return (
-        <ul>
+        <ul className="company-list">
             {list.map((item) => (
                 (user?.id === item.owner_id || item.is_visible) && (
                     <li key={item.id} className="company-item">
@@ -22,15 +22,13 @@ const ListCompanies: React.FC<ListUsersProps> = ({ list, user }) => {
                             <Link to={`/companyPage/${item.id}`}>{item.id}</Link>
                         </div>
 
-                        <div>
+                        <div className="company-details">
                             {item.name} {item.description}
                         </div>
                     </li>
                 )
             ))}
         </ul>
-
-
     );
 };
 
