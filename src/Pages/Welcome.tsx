@@ -15,8 +15,7 @@ const WelcomePage: React.FC = () => {
       <h1>Hello </h1>
       <p>React app</p>
       <div>
-      {/* <p>Test String: {testString}</p> */}
-      <button>Update Value</button>
+        Welcome to my REACT/FASTAPI APP
       </div>
     </div>
 

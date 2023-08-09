@@ -7,10 +7,6 @@ import { createRoot } from "react-dom/client";
 import { Auth0Provider } from '@auth0/auth0-react';
 
 
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "./types/types";
-
-import callBackendApi from "./api/backend_me";
 
 
 const rootElement = document.getElementById('root');
@@ -27,7 +23,6 @@ if (rootElement) {
         redirect_uri: window.location.origin,
         audience: process.env.REACT_APP_AP_DOMAIN,
       }}
-
     >
       <Provider store={store}>
         <AppRouter />

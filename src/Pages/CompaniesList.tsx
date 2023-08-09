@@ -11,6 +11,7 @@ import { FormikHelpers } from "formik";
 import { Form } from "formik";
 import Button from "../components/layout/Button";
 import { useNavigate } from "react-router-dom";
+import ListCompanies from "../components/layout/ListCompanies";
 
 export interface FormValues {
     name: string;
@@ -26,8 +27,8 @@ const CompaniesListPage: React.FC = () => {
     const user = useSelector((state: RootState) => state.user.user);
     const [companies, setCompanies] = useState<Company[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
     const navigate = useNavigate();
+
     const openModal = () => {
         setIsModalOpen(true);
     };
@@ -36,7 +37,7 @@ const CompaniesListPage: React.FC = () => {
         setIsModalOpen(false);
     };
 
-    const initialValues: FormValues = {
+    const [formValues, setFormValues] = useState<FormValues>({
         name: "",
         description: "",
         site: "",
@@ -44,22 +45,14 @@ const CompaniesListPage: React.FC = () => {
         country: "",
         is_visible: false,
         owner_id: user?.id || 0
+      });
 
-    };
 
-    const [formData, setFormData] = useState<FormValues>({
-
-        name: "",
-        description: "",
-        site: "",
-        city: "",
-        country: "",
-        is_visible: false,
-        owner_id: user?.id || 0
-    });
 
     const handleFormSubmit = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
         closeModal();
+        values = formValues;
+        console.log(values);
         const token = localStorage.getItem('accessToken');
         const createdCompany = await axiosInstance.post("/companies/create", values, {
             headers: {
@@ -71,14 +64,21 @@ const CompaniesListPage: React.FC = () => {
         window.location.reload();
     }
 
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value, type, checked } = event.target;
+        console.log(value);
+        setFormValues((prevValues) => ({
+            ...prevValues,
+            [name]: type === "checkbox" ? checked : value,
+        }));
+    };
 
     const get_companies = async () => {
         try {
             const response = await axiosInstance.get(`/companies/all`);
             if (response.data.companies) {
                 setCompanies(response.data.companies);
-
-                // dispatch(updateUsers(response.data.users))
+                console.log(companies);
 
             } else {
                 console.error("Invalid response data format:", response.data);
@@ -95,6 +95,8 @@ const CompaniesListPage: React.FC = () => {
 
         fetchCompanies();
     }, []);
+
+
     return (
         <div>
             <button onClick={openModal}>Create Company</button>
@@ -102,28 +104,83 @@ const CompaniesListPage: React.FC = () => {
                 <h2>Company</h2>
 
                 <Formik
-                    initialValues={initialValues}
+                    initialValues={formValues}
                     onSubmit={handleFormSubmit}
                 >
                     {formik => (
                         <Form className="register-form">
                             <div>
-                                <Input htmlFor="name" text="Company Name:" type="text" id="companyName" name="name" accept="*/*"></Input>
+                                <Input
+                                    htmlFor="name"
+                                    text="Company Name:"
+                                    type="text"
+                                    id="companyName"
+                                    name="name"
+                                    accept="*/*"
+                                    value={formValues.name}
+                                    onChange={handleChange}
+                                />
                             </div>
                             <div>
-                                <Input htmlFor="description" text="Description:" type="text" id="description" name="description" accept="*/*"></Input>
+                                <Input
+                                    htmlFor="description"
+                                    text="Description:"
+                                    type="text"
+                                    id="description"
+                                    name="description"
+                                    accept="*/*"
+                                    value={formValues.description}
+                                    onChange={handleChange}
+
+                                />
                             </div>
                             <div>
-                                <Input htmlFor="site" text="Site:" type="text" id="site" name="site" accept="*/*"></Input>
+                                <Input
+                                    htmlFor="site"
+                                    text="Site:"
+                                    type="text"
+                                    id="site"
+                                    name="site"
+                                    accept="*/*"
+                                    value={formValues.site}
+                                    onChange={handleChange}
+                                />
                             </div>
                             <div>
-                                <Input htmlFor="city" text="City:" type="text" id="city" name="city" accept="*/*"></Input>
+                                <Input
+                                    htmlFor="city"
+                                    text="City:"
+                                    type="text"
+                                    id="city"
+                                    name="city"
+                                    accept="*/*"
+                                    value={formValues.city}
+                                    onChange={handleChange}
+                                />
                             </div>
                             <div>
-                                <Input htmlFor="country" text="Country:" type="text" id="country" name="country" accept="*/*"></Input>
+                                <Input
+                                    htmlFor="country"
+                                    text="Country:"
+                                    type="text"
+                                    id="country"
+                                    name="country"
+                                    accept="*/*"
+                                    value={formValues.country}
+                                    onChange={handleChange}
+                                />
                             </div>
                             <div>
-                                <Input htmlFor="is_visible" text="Visible" type="checkbox" id="is_visible" name="is_visible" accept="*/*"></Input>
+                                <Input
+                                    htmlFor="is_visible"
+                                    text="Visible"
+                                    type="checkbox"
+                                    id="is_visible"
+                                    name="is_visible"
+                                    accept="*/*"
+                                    checked={formValues.is_visible}
+                                    onChange={handleChange}
+                                />
                             </div>
                             <Button text="Create" type="submit" />
                         </Form>
@@ -131,26 +188,7 @@ const CompaniesListPage: React.FC = () => {
                 </Formik>
             </Modal>
             <h1>Companies List</h1>
-            <ul>
-                {companies
-                    .filter((company) => {
-                        if(company.owner_id === user?.id){
-                            return company.name
-                        }
-                        else{
-                            return company.is_visible
-                        }
-                    
-                      })
-                    .map((company) => (
-                        <li key={company.id} className="company-item">
-                            <div>
-                                <Link to={`/companyPage/${company.id}`}>{company.id}</Link>
-                            </div>
-                            <div>{company.name} {company.description}</div>
-                        </li>
-                    ))}
-            </ul>
+            <ListCompanies list={companies} user={user} />
         </div>
     );
 

@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Input from "../components/layout/Input";
 import Button from "../components/layout/Button";
-import { Formik, Form, ErrorMessage, FormikHelpers, FormikProps } from "formik";
+import { Formik, Form, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import '../styles/registerPage.css';
 import commonValidation from "../components/validation/validationPassword";
@@ -13,10 +13,7 @@ import axiosInstance from "../api/api_instance";
 import callBackendApi from "../api/backend_me";
 import { useDispatch } from "react-redux";
 
-
-
 export interface FormValues {
-
   username: string;
   email: string;
   password: string;
@@ -26,59 +23,12 @@ export interface FormValues {
   phone: string;
   status: boolean;
   roles: string[];
-};
+}
 
 const UserRegistrationPage: React.FC = () => {
   const { loginWithPopup, isAuthenticated, getAccessTokenSilently, user } = useAuth0();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const initialValues: FormValues = {
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    city: "",
-    country: "",
-    phone: "",
-    status: true,
-    roles: ["user"],
-  };
-
-  const handleFormSubmit = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
-    console.log("Form submitted");
-    const { username, email, password, city, country, phone, status, roles } = values;
-
-    const requestData = {
-      username,
-      email,
-      password,
-      city,
-      country,
-      phone,
-      status,
-      roles,
-    };
-
-    try {
-      const response = await axiosInstance.post('/users/register', requestData);
-      console.log(response);
-
-      localStorage.setItem('accessToken', response.data);
-      dispatch(updateUser(response.data));
-
-
-      navigate("/auth");
-    } catch (error) {
-      console.error("Error during login:", error);
-    } finally {
-      formikHelpers.setSubmitting(false);
-    }
-  };
-
-
-
-
 
   const handleFormSubmitAuth0 = async () => {
     try {
@@ -91,8 +41,6 @@ const UserRegistrationPage: React.FC = () => {
             audience: process.env.REACT_APP_API_AUDEINCE,
           },
         });
-        console.log(user);
-        console.log(accessToken);
 
         const userRep = await callBackendApi(accessToken);
 
@@ -108,9 +56,55 @@ const UserRegistrationPage: React.FC = () => {
     }
   };
 
+  const handleFormSubmit = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
+    console.log("Form submitted");
+
+    const requestData = {
+      username: values.username,
+      email: values.email,
+      password: values.password,
+      city: values.city,
+      country: values.country,
+      phone: values.phone,
+      status: values.status,
+      roles: values.roles,
+    };
+
+    try {
+      const response = await axiosInstance.post('/users/register', requestData);
+      const values = {
+        email: response.data.email,
+        password: requestData.password
+      }
+      const token = await axiosInstance.post("/users/login", values);
+      localStorage.setItem('accessToken', token.data);
+
+      navigate("/auth");
+    } catch (error) {
+      console.error("Error during login:", error);
+    } finally {
+      formikHelpers.setSubmitting(false);
+    }
+  };
+
+  const handleChange = (fieldName: keyof FormValues, formik: any) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.type === "checkbox" ? event.target.checked : event.target.value;
+    formik.setFieldValue(fieldName, newValue);
+  };
+
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={{
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        city: "",
+        country: "",
+        phone: "",
+        status: true,
+        roles: ["user"],
+      }}
       validationSchema={Yup.object().shape({
         ...commonValidation.fields,
         ...passwordValidation.fields,
@@ -126,9 +120,9 @@ const UserRegistrationPage: React.FC = () => {
               type="text"
               id="username"
               name="username"
-              accept="*/*"
+              onChange={handleChange("username", formik)}
             />
-            <ErrorMessage name="username" className="error-message" render={msg => <div>{msg}</div>} />
+            <ErrorMessage name="username" className="error-message" component="div" />
           </div>
 
           <div>
@@ -138,9 +132,9 @@ const UserRegistrationPage: React.FC = () => {
               type="email"
               id="email"
               name="email"
-              accept="*/*"
+              onChange={handleChange("email", formik)}
             />
-            <ErrorMessage name="email" className="error-message" render={msg => <div>{msg}</div>} />
+            <ErrorMessage name="email" className="error-message" component="div" />
           </div>
 
           <div>
@@ -150,24 +144,31 @@ const UserRegistrationPage: React.FC = () => {
               type="password"
               id="password"
               name="password"
-              accept="*/*"
+              onChange={handleChange("password", formik)}
             />
-            <ErrorMessage name="password" className="error-message" render={msg => <div>{msg}</div>} />
+            <ErrorMessage name="password" className="error-message" component="div" />
           </div>
 
           <div>
             <Input
-              htmlFor="confirm-password"
+              htmlFor="confirmPassword"
               text="Confirm Password:"
               type="password"
-              id="confirm-password"
+              id="confirmPassword"
               name="confirmPassword"
-              accept="*/*"
+              onChange={handleChange("confirmPassword", formik)}
             />
-            <ErrorMessage name="confirmPassword" className="error-message" render={msg => <div>{msg}</div>} />
+            <ErrorMessage name="confirmPassword" className="error-message" component="div" />
           </div>
 
-          <Input htmlFor="city" text="City:" type="text" id="city" name="city" accept="*/*" />
+          <Input
+            htmlFor="city"
+            text="City:"
+            type="text"
+            id="city"
+            name="city"
+            onChange={handleChange("city", formik)}
+          />
 
           <Input
             htmlFor="country"
@@ -175,14 +176,22 @@ const UserRegistrationPage: React.FC = () => {
             type="text"
             id="country"
             name="country"
-            accept="*/*"
+            onChange={handleChange("country", formik)}
           />
+
           <div>
-            <Input htmlFor="phone" text="Phone:" type="text" id="phone" name="phone" accept="*/*" />
+            <Input
+              htmlFor="phone"
+              text="Phone:"
+              type="text"
+              id="phone"
+              name="phone"
+              onChange={handleChange("phone", formik)}
+            />
           </div>
 
           <Button text="Register" type="submit" />
-          <Button type="submit" text="Log In with Auth0" onClick={handleFormSubmitAuth0} />
+          <Button type="button" text="Log In with Auth0" onClick={handleFormSubmitAuth0} />
         </Form>
       )}
     </Formik>
