@@ -67,11 +67,15 @@ const UserPage: React.FC = () => {
     }
   };
 
+  if(error){
+    return <p>{error}</p>
+  }
+  if(!user){
+    return <p>Loading user data...</p>
+  }
+
   return (
     <div className="user-profile-container">
-      {error ? (
-        <p>{error}</p>
-      ) : user ? (
         <div>
           <div className="user-profile-header">
             <h1>User ID: {user.id}</h1>
@@ -90,9 +94,6 @@ const UserPage: React.FC = () => {
             </div>
           )}
         </div>
-      ) : (
-        <p>Loading user data...</p>
-      )}
     </div>
   );
 };

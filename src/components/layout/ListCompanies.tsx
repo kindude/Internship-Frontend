@@ -13,7 +13,7 @@ const ListCompanies: React.FC<ListUsersProps> = ({ list, user }) => {
     return (
         <ul className="company-list">
             {list.map((item) => (
-                (user?.id === item.owner_id || item.is_visible) && (
+
                     <li key={item.id} className="company-item">
                         <div>
                             {user?.id === item.owner_id && (
@@ -26,7 +26,6 @@ const ListCompanies: React.FC<ListUsersProps> = ({ list, user }) => {
                             {item.name} {item.description}
                         </div>
                     </li>
-                )
             ))}
         </ul>
     );

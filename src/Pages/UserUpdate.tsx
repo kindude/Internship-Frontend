@@ -122,19 +122,6 @@ const UserUpdatePage: React.FC = () => {
                   <ErrorMessage name="username" className="error-message" component="div" />
                 </div>
 
-                <div>
-                  <Input
-                    htmlFor="email"
-                    text="Email:"
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formik.values.email}
-                    disabled
-                    onChange={handleChange("email", formik)}
-                  />
-                  <ErrorMessage name="email" className="error-message" component="div" />
-                </div>
 
                 <div>
                   <Input

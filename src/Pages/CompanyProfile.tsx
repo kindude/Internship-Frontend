@@ -19,17 +19,21 @@ const CompanyProfilePage: React.FC = () => {
 
   const navigate = useNavigate();
 
+  const fetchCompany = async () => {
+    try {
+      const response = await axiosInstance.get<Company>(`/companies/${companyId}`);
+      setCompany(response.data);
+      if(response.status === 404){
+        setError('Company not found');
+      }
+    } catch (error) {
+      setError('Company not found');
+      console.error('Error fetching company:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchCompany = async () => {
-      try {
-        const response = await axiosInstance.get<Company>(`/companies/${companyId}`);
-        setCompany(response.data);
-      } catch (error) {
-        setError('Company not found');
-        console.error('Error fetching company:', error);
-      }
-    };
+    
 
     fetchCompany();
   }, [companyId]);
@@ -39,7 +43,7 @@ const CompanyProfilePage: React.FC = () => {
     navigate(`/companies/update/${company?.id}`)
 
   }
-  
+
 
   const handleFormDelete = async () => {
     try {
@@ -66,32 +70,34 @@ const CompanyProfilePage: React.FC = () => {
     }
   };
 
+  if(error){
+    return <p>{error}</p>
+  }
 
-  return(
-    <div><div>
-    {error ? (
-      <p>{error}</p>
-    ) : company ? (
-      <div>
-        <h1>Company ID: {company.id}</h1>
-        <p>Name: {company.name}</p>
-        <p>Description: {company.description}</p>
-        <p>City: {company.city}</p>
-        <p>Country: {company.country}</p>
-        <p>Site: {company.site}</p>
-        
-        {user && user.id === company?.owner_id && (
-          <Button text="Edit" type="submit" onClick={handleFormUpdate} />
-        )}
-        {user && user.id === company?.owner_id && (
-          <Button text="Delete" type="submit" onClick={handleFormDelete} />
-        )}
+  if(!company){
+    return <p>Loading company data...</p>
+  }
 
-      </div>
-    ) : (
-      <p>Loading user data...</p>
-    )}
-  </div></div>
+  return (
+    <div>
+        <div>
+          <h1>Company ID: {company?.id}</h1>
+          <p>Name: {company?.name}</p>
+          <p>Description: {company?.description}</p>
+          <p>City: {company?.city}</p>
+          <p>Country: {company?.country}</p>
+          <p>Site: {company?.site}</p>
+
+          {user && user.id === company?.owner_id && (
+            <Button text="Edit" type="submit" onClick={handleFormUpdate} />
+          )}
+          {user && user.id === company?.owner_id && (
+            <Button text="Delete" type="submit" onClick={handleFormDelete} />
+          )}
+
+        </div>
+
+    </div>
   );
 };
 

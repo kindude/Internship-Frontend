@@ -19,7 +19,7 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, currentPage, onPage
                     onClick={() => onPageChange(pageNumber)}
                 >
 
-                    <a href="#">{pageNumber}</a>
+                    <p>{pageNumber}</p>
 
                 </li>
             ))}
