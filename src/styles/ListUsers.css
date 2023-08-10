@@ -1,0 +1,43 @@
+.user-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .user-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #f9f9f9;
+  }
+  
+  .user-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .user-id {
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .user-details {
+    margin-top: 5px;
+  }
+  
+  .detail {
+    margin-top: 5px;
+  }
+  
+  .status {
+    font-weight: bold;
+  }
+  
+  .status.active {
+    color: green;
+  }
+  
+  .status.inactive {
+    color: red;
+  }
+  

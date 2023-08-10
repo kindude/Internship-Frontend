@@ -13,20 +13,21 @@ interface InputProps {
   value?: string | boolean;
   checked?: boolean;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean;
 }
 
-const Input: React.FC<InputProps> = ({ htmlFor, text, id, name, type, accept, value, checked, onChange, ...rest }) => {
+const Input: React.FC<InputProps> = ({ htmlFor, text, id, name, type, accept, value, checked, onChange, disabled, ...rest }) => {
   return (
     <div>
       {type === "checkbox" ? (
         <label htmlFor={htmlFor}>
           {text}
-          <input type="checkbox" id={id} name={name} accept={accept} checked={checked || false} onChange={onChange} {...rest} />
+          <input type="checkbox" id={id} name={name} accept={accept} disabled={disabled} checked={checked || false} onChange={onChange} {...rest} />
         </label>
       ) : (
         <div>
           <label htmlFor={htmlFor}>{text}</label>
-          <input type={type} id={id} name={name} accept={accept} value={value as string} onChange={onChange} {...rest} />
+          <input type={type} id={id} name={name} accept={accept} disabled={disabled} value={value as string} onChange={onChange} {...rest} />
         </div>
       )}
     </div>

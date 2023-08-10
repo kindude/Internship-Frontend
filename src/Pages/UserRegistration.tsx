@@ -49,6 +49,7 @@ const UserRegistrationPage: React.FC = () => {
 
         dispatch(updateUser(userRep.data));
         navigate("/login");
+        window.location.reload();
       } else {
         console.log("User's not authenticated");
       }
@@ -79,6 +80,7 @@ const UserRegistrationPage: React.FC = () => {
       localStorage.setItem('accessToken', token.data);
 
       navigate("/auth");
+      window.location.reload();
     } catch (error) {
       console.error("Error during login:", error);
     } finally {

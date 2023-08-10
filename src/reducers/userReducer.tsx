@@ -2,22 +2,25 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {User} from "../types/UserResponse";
 
 export interface UserState {
-  user: User | undefined; // Change null to undefined or User
+  user: User | undefined; 
 }
 
 const initialState: UserState = {
-  user: undefined, // Change null to undefined or remove this line if you want to initialize with an empty object
+  user: undefined,
 };
 
 const userSlice = createSlice({
-  name: 'user', // Change 'string' to 'user'
+  name: 'user', 
   initialState,
   reducers: {
     updateUser: (state, action: PayloadAction<User>) =>{
       state.user = action.payload;
-    }
+    },
+    clearUser: (state) => {
+      state.user = undefined; // Reset user to undefined
+    },
   },
 });
 
-export const { updateUser } = userSlice.actions; // Change from stringSlice to userSlice
-export default userSlice.reducer; // Change from stringSlice to userSlice
+export const { updateUser, clearUser } = userSlice.actions; 
+export default userSlice.reducer; 

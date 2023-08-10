@@ -1,41 +1,33 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { User } from "../../types/UserResponse";
-
-interface ListUserItem {
-    id: number;
-    name: string;
-    description: string;
-    site: string;
-    city: string;
-    country: string;
-    is_visible: boolean;
-    owner_id: number;
-}
+import { Company } from "../../types/CompanyResponse";
+import "../../styles/ListCompanies.css";
 
 interface ListUsersProps {
-    list: ListUserItem[];
+    list: Company[];
     user: User | undefined;
 }
 
 const ListCompanies: React.FC<ListUsersProps> = ({ list, user }) => {
     return (
-        <ul>
+        <ul className="company-list">
             {list.map((item) => (
-                (user?.id === item.owner_id || item.is_visible) && (
+
                     <li key={item.id} className="company-item">
                         <div>
+                            {user?.id === item.owner_id && (
+                                <span>✓ </span>
+                            )}
                             <Link to={`/companyPage/${item.id}`}>{item.id}</Link>
                         </div>
-                        <div>
+
+                        <div className="company-details">
                             {item.name} {item.description}
                         </div>
                     </li>
-                )
             ))}
         </ul>
-
-
     );
 };
 
