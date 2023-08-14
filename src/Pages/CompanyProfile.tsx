@@ -70,6 +70,12 @@ const CompanyProfilePage: React.FC = () => {
     }
   };
 
+
+  const requestCompany = () => {
+    const token = localStorage.getItem("accessToken");
+    const requestData = {}
+  }
+
   if(error){
     return <p>{error}</p>
   }
@@ -81,6 +87,7 @@ const CompanyProfilePage: React.FC = () => {
   return (
     <div>
         <div>
+          <Button onClick={requestCompany} text="Request to join the company" type="button"/>
           <h1>Company ID: {company?.id}</h1>
           <p>Name: {company?.name}</p>
           <p>Description: {company?.description}</p>
