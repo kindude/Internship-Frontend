@@ -95,11 +95,7 @@ const CompanyUpdatePage: React.FC = () => {
       console.log(token);
 
 
-      const response = await axiosInstance.post(`/companies/${companyId}`, company, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axiosInstance.post(`/companies/${companyId}`, company);
 
       if (response.status === 200) {
         console.log("Company deleted successfully");

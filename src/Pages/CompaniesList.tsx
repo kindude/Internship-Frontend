@@ -213,7 +213,7 @@ const CompaniesListPage: React.FC = () => {
                 </Formik>
             </Modal>
             <h1 className="page-header">Companies List</h1>
-            <ListCompanies list={companies} user={user} />
+            <ListCompanies list={companies} user={user} showLink={true}/>
             <div className="pagination-container">
                 <Pagination
                     totalPages={pagination.total_pages}

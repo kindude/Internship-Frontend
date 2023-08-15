@@ -15,6 +15,7 @@ import BackendStatus from "./components/layout/BackendStatus";
 import { PrivateRoute } from "./types/types";
 import UserPage from "./pages/UserPage";
 import UserUpdatePage from "./pages/UserUpdate";
+import CompanyMembersPage from "./pages/CompanyMembers";
 
 
 const AppRouter: React.FC = () => {
@@ -36,6 +37,7 @@ const AppRouter: React.FC = () => {
                     <Route path="/users/update/:userId" element={<UserUpdatePage/>} />
                     <Route path="/companyPage/:companyId" element={<CompanyProfilePage/>} />
                     <Route path="/companies/update/:companyId" element={<CompanyUpdatePage/>} />
+                    <Route path="/company-members/:companyId" element={<CompanyMembersPage/>} />
                 </Routes>
                 <Footer />
               

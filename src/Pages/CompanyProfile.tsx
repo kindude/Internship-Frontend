@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../types/types";
@@ -59,11 +59,7 @@ const CompanyProfilePage: React.FC = () => {
       const token = localStorage.getItem("accessToken");
 
 
-      const response = await axiosInstance.post(`/companies/${companyId}`, company, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axiosInstance.post(`/companies/${companyId}`, company);
 
       if (response.status === 200) {
         console.log("Company deleted successfully");
@@ -82,11 +78,7 @@ const CompanyProfilePage: React.FC = () => {
   const fetchRequests = async () => {
     const token = localStorage.getItem("accessToken");
     try {
-      const response = await axiosInstance.get(`/companies/${companyId}/requests/all`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axiosInstance.get(`/companies/${companyId}/requests/all`);
       setRequests(response.data.actions);
       openModal();
     } catch (error) {
@@ -163,6 +155,10 @@ const CompanyProfilePage: React.FC = () => {
     }
   };
 
+  const members = (company_id:number) => {
+    navigate(`/company-members/${company_id}`);
+  };
+
   if (error) {
     return <p>{error}</p>
   }
@@ -201,6 +197,10 @@ const CompanyProfilePage: React.FC = () => {
           {user && user.id === company?.owner_id && (
         <Button text="Company invites" type="button" onClick={fetchInvites} className='edit' />
         )}
+        {user && user.id === company?.owner_id && (
+        <Button text="MEMBERS" type="button" className='edit' onClick={() => members(company?.id)} />
+        )}
+
 
         {requests.length > 0 && (
           <Modal windowName='Requests' isOpen={isModalOpen} onClose={closeModal}>

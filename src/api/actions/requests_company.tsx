@@ -11,11 +11,7 @@ export const acceptRequest_company = async(request_id:number, company_id:number,
           type_of_action: "REQUEST"
         };
 
-        const response = await axiosInstance.post(`/companies/${company_id}/request/accept`, requestData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axiosInstance.post(`/companies/${company_id}/request/accept`, requestData);
       } catch (error) {
         console.error('Error fetching requests:', error);
       }
@@ -33,11 +29,7 @@ export const rejectRequest_company = async(request_id:number, company_id:number,
           type_of_action: "REQUEST"
         };
   
-        const response = await axiosInstance.post(`/companies/${company_id}/request/reject`, requestData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axiosInstance.post(`/companies/${company_id}/request/reject`, requestData);
       } catch (error) {
         console.error('Error fetching requests:', error);
       }

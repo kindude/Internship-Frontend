@@ -11,11 +11,7 @@ export const cancelRequest_user = async (request_id:number, company_id:number, u
         type_of_action: "REQUEST"
       };
 
-      const response = await axiosInstance.post(`/action/request/cancel`, requestData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axiosInstance.post(`/action/request/cancel`, requestData);
     } catch (error) {
       console.error('Error fetching requests:', error);
     }

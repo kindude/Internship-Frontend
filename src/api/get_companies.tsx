@@ -3,9 +3,6 @@ import axiosInstance from "./api_instance";
 export const get_companies = async (page: number, per_page: number) => {
     try {
         const response = await axiosInstance.get(`/companies/all`, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
             params: {
                 page: page,
                 per_page: per_page,

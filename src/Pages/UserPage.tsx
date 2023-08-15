@@ -24,7 +24,8 @@ const UserPage: React.FC = () => {
   const [requests, setRequests] = useState<ActionResponse[]>([]);
   const dispatch = useDispatch();
   const currentUser = useSelector((state: RootState) => state.user.user);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenReq, setIsModalOpenReq] = useState(false);
+  const [isModalOpenInv, setIsModalOpenInv] = useState(false);
   const [invites, setInvites] = useState<ActionResponse[]>([]);
 
 
@@ -44,25 +45,29 @@ const UserPage: React.FC = () => {
     fetchUser();
   }, [userId]);
 
-  const openModal = () => {
-    setIsModalOpen(true);
+  const openModalReq = () => {
+    setIsModalOpenReq(true);
 };
 
-const closeModal = () => {
-    setIsModalOpen(false);
+const closeModalReq = () => {
+    setIsModalOpenReq(false);
+};
+
+const openModalInv = () => {
+  setIsModalOpenInv(true);
+};
+
+const closeModalInv = () => {
+  setIsModalOpenInv(false);
 };
 
 
   const fetchRequests = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await axiosInstance.get(`/action/requests/all`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axiosInstance.get(`/action/requests/all`);
       setRequests(response.data.actions);
-      openModal();
+      openModalReq();
     } catch (error) {
       console.error('Error fetching requests:', error);
     }
@@ -71,13 +76,9 @@ const closeModal = () => {
   const fetchInvites = async () => {
     try{
       const token = localStorage.getItem('accessToken');
-      const response = await axiosInstance.get(`/action/invites/all`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axiosInstance.get(`/action/invites/all`);
       setInvites(response.data.actions);
-      openModal();
+      openModalInv();
     } catch(error){
       console.error("Error fetching invites:", error);
     }
@@ -108,11 +109,7 @@ const closeModal = () => {
   const handleDelete = async () => {
     const token = localStorage.getItem("accessToken");
     try {
-      const response = await axiosInstance.delete(`/users/${user?.id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axiosInstance.delete(`/users/${user?.id}`);
 
       if (response.status === 200) {
         localStorage.removeItem("accessToken");
@@ -151,7 +148,7 @@ const closeModal = () => {
         </div>
         
         {requests.length > 0 && (
-          <Modal windowName='Requests' isOpen={isModalOpen} onClose={closeModal}>
+          <Modal windowName='Requests' isOpen={isModalOpenReq} onClose={closeModalReq}>
             <h2>My Requests</h2>
             <ul>
               {requests.map(request => (
@@ -163,11 +160,11 @@ const closeModal = () => {
               ))}
              
             </ul>
-            <Button text="Close" type='button' onClick={closeModal}/>
+            <Button text="Close" type='button' onClick={closeModalReq}/>
           </Modal>
         )}
         {invites.length > 0  && (
-          <Modal windowName='Invites' isOpen={isModalOpen} onClose={closeModal}>
+          <Modal windowName='Invites' isOpen={isModalOpenInv} onClose={closeModalInv}>
             <h2>My Requests</h2>
             <ul>
               {invites.map(invite => (
@@ -176,12 +173,11 @@ const closeModal = () => {
                   <h1>Status</h1><p>{invite.status}</p>
                   <Button text="Accept" type="button" onClick={() => acceptInvite(invite.id, invite.company_id, invite.user_id)}/>
                   <Button text="Reject" type="button" onClick={() => rejectInvite(invite.id, invite.company_id, invite.user_id)}/>
-                  <Button text="Close Window" type="button" onClick={closeModal}/>
                 </li>
               ))}
              
             </ul>
-            <Button text="Close" type='button' onClick={closeModal}/>
+            <Button text="Close" type='button' onClick={closeModalInv}/>
           </Modal>
         )}
 

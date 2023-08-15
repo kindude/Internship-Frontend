@@ -11,11 +11,7 @@ export const acceptInvite_user = async(request_id:number, company_id:number, use
           type_of_action: "INVITE"
         };
   
-        const response = await axiosInstance.post(`/action/invite/accept`, requestData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axiosInstance.post(`/action/invite/accept`, requestData);
       } catch (error) {
         console.error('Error fetching requests:', error);
       }
@@ -33,11 +29,7 @@ export const rejectInvite_user = async(request_id:number, company_id:number, use
           type_of_action: "INVITE"
         };
   
-        const response = await axiosInstance.post(`/action/invite/reject`, requestData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axiosInstance.post(`/action/invite/reject`, requestData);
       } catch (error) {
         console.error('Error fetching requests:', error);
       }
