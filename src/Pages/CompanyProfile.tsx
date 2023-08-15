@@ -15,6 +15,7 @@ const CompanyProfilePage: React.FC = () => {
   const user = useSelector((state: RootState) => state.user.user);
   const [company, setCompany] = useState<Company | undefined>();
   const [error, setError] = useState<string | null>(null);
+  const [requestStatus, setRequestStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
 
   const navigate = useNavigate();
@@ -71,10 +72,35 @@ const CompanyProfilePage: React.FC = () => {
   };
 
 
-  const requestCompany = () => {
-    const token = localStorage.getItem("accessToken");
-    const requestData = {}
-  }
+  const requestCompany = async () => {
+    try {
+      setRequestStatus('loading'); 
+      const token = localStorage.getItem('accessToken');
+      const requestData = {
+        user_id: user?.id, 
+        company_id: company?.id, 
+        status: "PENDING",
+        type_of_action: "REQUEST"
+      }; 
+      const response = await axiosInstance.post(
+        `/action/request/create`,
+        requestData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setRequestStatus('success'); // Request successful
+      } else {
+        setRequestStatus('error'); // Request failed
+      }
+    } catch (error) {
+      setRequestStatus('error'); // Request failed
+    }
+  };
 
   if(error){
     return <p>{error}</p>
@@ -87,7 +113,13 @@ const CompanyProfilePage: React.FC = () => {
   return (
     <div>
         <div>
-          <Button onClick={requestCompany} text="Request to join the company" type="button"/>
+          {company.owner_id != user?.id && (<Button
+          onClick={requestCompany}
+          text="Request to join the company"
+          type="button"
+          disabled={requestStatus === 'loading' || requestStatus === 'success'}
+        />)}
+
           <h1>Company ID: {company?.id}</h1>
           <p>Name: {company?.name}</p>
           <p>Description: {company?.description}</p>
