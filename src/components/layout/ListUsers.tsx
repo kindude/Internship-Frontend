@@ -10,6 +10,8 @@ import { Company } from "../../types/CompanyResponse";
 import Modal from "../modal/Modal";
 import ListCompanies from "./ListCompanies";
 import { User } from "../../types/UserResponse";
+import { ReactNode } from "react";
+import { remove_member } from "../../pages/CompanyMembers";
 
 interface ListUserItem {
   id: number;
@@ -24,9 +26,12 @@ interface ListUserItem {
 
 interface ListUsersProps {
   list: ListUserItem[];
+  show: boolean;
+  companyId: number;
+  onRemove?: (userId: number) => void;
 }
 
-const ListUsers: React.FC<ListUsersProps> = ({ list }) => {
+const ListUsers: React.FC<ListUsersProps> = ({ list, show,companyId, onRemove }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [user, setUser] = useState<User>();
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
@@ -73,8 +78,8 @@ const ListUsers: React.FC<ListUsersProps> = ({ list }) => {
         const requestPayload = {
           company_id: selectedCompany.id,
           user_id: selectedUser.id,
-          status:"PENDING",
-          type_of_action:"INVITE"
+          status: "PENDING",
+          type_of_action: "INVITE"
         };
 
         const response = await axiosInstance.post("/companies/invite/create", requestPayload, {
@@ -92,6 +97,8 @@ const ListUsers: React.FC<ListUsersProps> = ({ list }) => {
     }
   };
 
+
+
   return (
     <div>
       <ul className="user-list">
@@ -101,10 +108,25 @@ const ListUsers: React.FC<ListUsersProps> = ({ list }) => {
               <Link to={`/userPage/${item.id}`} className="user-id">
                 {item.id}
               </Link>
-              <Button text="Invite" type="button" className="edit" onClick={() => {
-                setSelectedCompany(null);
-                onInviteClick(item); 
-              }} />
+              {show ? (
+                <Button
+                  text="Invite"
+                  type="button"
+                  className="edit"
+                  onClick={() => {
+                    setSelectedCompany(null);
+                    onInviteClick(item);
+                  }}
+                />
+              ) : (
+                <Button
+                  text="Remove"
+                  type="button"
+                  className="edit"
+                  onClick={() => remove_member(companyId, item.id)
+                  }
+                />
+              )}
 
               <div className="user-details">
                 <div className="detail">Username: {item.username}</div>

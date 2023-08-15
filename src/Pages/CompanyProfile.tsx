@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../types/types";
@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { ActionResponse } from "../types/ActionResponse";
 import Modal from "../components/modal/Modal";
 import { acceptRequest_company, rejectRequest_company } from "../api/actions/requests_company";
+import ListActions from "../components/layout/ListActions";
 
 
 
@@ -92,7 +93,7 @@ const CompanyProfilePage: React.FC = () => {
 
 
     try {
-      const response = await axiosInstance.get(`/companies/${companyId}/invites/all`,{
+      const response = await axiosInstance.get(`/companies/${companyId}/invites/all`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -137,12 +138,7 @@ const CompanyProfilePage: React.FC = () => {
       };
       const response = await axiosInstance.post(
         `/action/invite/create`,
-        requestData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        requestData
       );
 
       if (response.status === 200) {
@@ -155,7 +151,26 @@ const CompanyProfilePage: React.FC = () => {
     }
   };
 
-  const members = (company_id:number) => {
+  const remove_user_from_company = async () => {
+
+  }
+
+  const cancelInvite = async (actionId: number, companyId: number, userId: number) => {
+    const requestData = {
+      user_id: user?.id,
+      company_id: company?.id,
+      status: "PENDING",
+      type_of_action: "INVITE"
+    };
+
+    const response = await axiosInstance.post(
+      `/action/invite/cancell`,
+      requestData
+    );
+
+  };
+
+  const members = (company_id: number) => {
     navigate(`/company-members/${company_id}`);
   };
 
@@ -191,49 +206,45 @@ const CompanyProfilePage: React.FC = () => {
         {user && user.id === company?.owner_id && (
           <Button text="Delete" type="submit" onClick={handleFormDelete} />
         )}
-         {user && user.id === company?.owner_id && (
-        <Button text="Company requests" type="button" onClick={fetchRequests} className='edit' />
-        )}
-          {user && user.id === company?.owner_id && (
-        <Button text="Company invites" type="button" onClick={fetchInvites} className='edit' />
+        {user && user.id === company?.owner_id && (
+          <Button text="Company requests" type="button" onClick={fetchRequests} className='edit' />
         )}
         {user && user.id === company?.owner_id && (
-        <Button text="MEMBERS" type="button" className='edit' onClick={() => members(company?.id)} />
+          <Button text="Company invites" type="button" onClick={fetchInvites} className='edit' />
+        )}
+        {user && user.id === company?.owner_id && (
+          <Button text="MEMBERS" type="button" className='edit' onClick={() => members(company?.id)} />
         )}
 
 
-        {requests.length > 0 && (
-          <Modal windowName='Requests' isOpen={isModalOpen} onClose={closeModal}>
-            <h2>My Requests</h2>
-            <ul>
-              {requests.map(request => (
-                <li key={request.id}>
-                  <h1>Company_id</h1><p>{request.company_id}</p>
-                  <h1>Status</h1><p>{request.status}</p>
-                  <Button text="Accept" type="button" onClick={() => acceptRequest(request.id,request.company_id, request.user_id)} />
-                  <Button text="Reject" type="button" onClick={() => rejectRequest(request.id, request.company_id, request.user_id)} />
-                  <Button text="Close" type="button" onClick={closeModal} />
-                </li>
-              ))}
 
-            </ul>
-            <Button text="Close" type='button' onClick={closeModal} />
-          </Modal>
-        )}
+          {
+            requests.length > 0 && (
+              <Modal windowName='Requests' isOpen={isModalOpen} onClose={closeModal}>
+                <h2>My Requests</h2>
+                <ListActions list={invites} acceptAction={acceptRequest} rejectAction={rejectRequest}>
+                  {(actionId, companyId, userId) => (
+                    <div>
+                      <Button text="Accept" type="button" onClick={() => acceptRequest(actionId, companyId, userId)} />
+                      <Button text="Reject" type="button" onClick={() => rejectRequest(actionId, companyId, userId)} />
+                    </div>
+                  )}
+                </ListActions>
+                <Button text="Close" type='button' onClick={closeModal} />
+              </Modal>
+            )
+          }
         {invites.length > 0 && (
           <Modal windowName='Invites' isOpen={isModalOpen} onClose={closeModal}>
-            <h2>My Requests</h2>
-            <ul>
-              {invites.map(invite => (
-                <li key={invite.id}>
-                  <h1>Company_id</h1><p>{invite.company_id}</p>
-                  <h1>Status</h1><p>{invite.status}</p>
-                 
-                  <Button text="Close Window" type="button" onClick={closeModal} />
-                </li>
-              ))}
+            <h2>My Invites</h2>
+            <ListActions list={invites} cancelAction={cancelInvite}>
+              {(actionId, companyId, userId) => (
+                <div>
+                  <Button text="Cancel" type="button" onClick={() => cancelInvite(actionId, companyId, userId)} />
+                </div>
+              )}
 
-            </ul>
+            </ListActions>
             <Button text="Close" type='button' onClick={closeModal} />
           </Modal>
         )}
