@@ -8,6 +8,12 @@ import { Formik, Form, FormikHelpers } from "formik";
 import Input from "../components/layout/Input";
 import Button from "../components/layout/Button";
 import { useNavigate } from "react-router-dom";
+import { ActionResponse } from "../types/ActionResponse";
+import Modal from "../components/modal/Modal";
+import { acceptRequest_company, rejectRequest_company } from "../api/actions/requests_company";
+
+
+
 
 const CompanyProfilePage: React.FC = () => {
 
@@ -16,7 +22,9 @@ const CompanyProfilePage: React.FC = () => {
   const [company, setCompany] = useState<Company | undefined>();
   const [error, setError] = useState<string | null>(null);
   const [requestStatus, setRequestStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-
+  const [requests, setRequests] = useState<ActionResponse[]>([]);
+  const [invites, setInvites] = useState<ActionResponse[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -24,7 +32,7 @@ const CompanyProfilePage: React.FC = () => {
     try {
       const response = await axiosInstance.get<Company>(`/companies/${companyId}`);
       setCompany(response.data);
-      if(response.status === 404){
+      if (response.status === 404) {
         setError('Company not found');
       }
     } catch (error) {
@@ -34,7 +42,7 @@ const CompanyProfilePage: React.FC = () => {
   };
 
   useEffect(() => {
-    
+
 
     fetchCompany();
   }, [companyId]);
@@ -49,7 +57,6 @@ const CompanyProfilePage: React.FC = () => {
   const handleFormDelete = async () => {
     try {
       const token = localStorage.getItem("accessToken");
-      console.log(token);
 
 
       const response = await axiosInstance.post(`/companies/${companyId}`, company, {
@@ -72,18 +79,72 @@ const CompanyProfilePage: React.FC = () => {
   };
 
 
-  const requestCompany = async () => {
+  const fetchRequests = async () => {
+    const token = localStorage.getItem("accessToken");
     try {
-      setRequestStatus('loading'); 
+      const response = await axiosInstance.get(`/companies/${companyId}/requests/all`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setRequests(response.data.actions);
+      openModal();
+    } catch (error) {
+      console.error('Error fetching requests:', error);
+    }
+
+  }
+
+  const fetchInvites = async () => {
+    const token = localStorage.getItem("accessToken");
+
+
+    try {
+      const response = await axiosInstance.get(`/companies/${companyId}/invites/all`,{
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setInvites(response.data.actions);
+      openModal();
+
+    } catch (error) {
+      console.error('Error fetching invites:', error);
+    }
+
+  }
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const acceptRequest = async (request_id: number, company_id: number, user_id: number) => {
+    acceptRequest_company(request_id, company_id, user_id);
+    fetchRequests();
+  }
+
+  const rejectRequest = async (request_id: number, company_id: number, user_id: number) => {
+    rejectRequest_company(request_id, company_id, user_id);
+    fetchRequests();
+  }
+
+
+  const inviteToCompany = async () => {
+    try {
+      setRequestStatus('loading');
       const token = localStorage.getItem('accessToken');
       const requestData = {
-        user_id: user?.id, 
-        company_id: company?.id, 
+        user_id: user?.id,
+        company_id: company?.id,
         status: "PENDING",
         type_of_action: "REQUEST"
-      }; 
+      };
       const response = await axiosInstance.post(
-        `/action/request/create`,
+        `/action/invite/create`,
         requestData,
         {
           headers: {
@@ -102,39 +163,81 @@ const CompanyProfilePage: React.FC = () => {
     }
   };
 
-  if(error){
+  if (error) {
     return <p>{error}</p>
   }
 
-  if(!company){
+  if (!company) {
     return <p>Loading company data...</p>
   }
 
   return (
     <div>
-        <div>
-          {company.owner_id != user?.id && (<Button
-          onClick={requestCompany}
+      <div>
+        {company.owner_id != user?.id && (<Button
+          onClick={inviteToCompany}
           text="Request to join the company"
           type="button"
           disabled={requestStatus === 'loading' || requestStatus === 'success'}
         />)}
 
-          <h1>Company ID: {company?.id}</h1>
-          <p>Name: {company?.name}</p>
-          <p>Description: {company?.description}</p>
-          <p>City: {company?.city}</p>
-          <p>Country: {company?.country}</p>
-          <p>Site: {company?.site}</p>
 
-          {user && user.id === company?.owner_id && (
-            <Button text="Edit" type="submit" onClick={handleFormUpdate} />
-          )}
-          {user && user.id === company?.owner_id && (
-            <Button text="Delete" type="submit" onClick={handleFormDelete} />
-          )}
+        <h1>Company ID: {company?.id}</h1>
+        <p>Name: {company?.name}</p>
+        <p>Description: {company?.description}</p>
+        <p>City: {company?.city}</p>
+        <p>Country: {company?.country}</p>
+        <p>Site: {company?.site}</p>
 
-        </div>
+        {user && user.id === company?.owner_id && (
+          <Button text="Edit" type="submit" onClick={handleFormUpdate} />
+        )}
+        {user && user.id === company?.owner_id && (
+          <Button text="Delete" type="submit" onClick={handleFormDelete} />
+        )}
+         {user && user.id === company?.owner_id && (
+        <Button text="Company requests" type="button" onClick={fetchRequests} className='edit' />
+        )}
+          {user && user.id === company?.owner_id && (
+        <Button text="Company invites" type="button" onClick={fetchInvites} className='edit' />
+        )}
+
+        {requests.length > 0 && (
+          <Modal windowName='Requests' isOpen={isModalOpen} onClose={closeModal}>
+            <h2>My Requests</h2>
+            <ul>
+              {requests.map(request => (
+                <li key={request.id}>
+                  <h1>Company_id</h1><p>{request.company_id}</p>
+                  <h1>Status</h1><p>{request.status}</p>
+                  <Button text="Close" type="button" onClick={closeModal} />
+                </li>
+              ))}
+
+            </ul>
+            <Button text="Close" type='button' onClick={closeModal} />
+          </Modal>
+        )}
+        {invites.length > 0 && (
+          <Modal windowName='Invites' isOpen={isModalOpen} onClose={closeModal}>
+            <h2>My Requests</h2>
+            <ul>
+              {invites.map(invite => (
+                <li key={invite.id}>
+                  <h1>Company_id</h1><p>{invite.company_id}</p>
+                  <h1>Status</h1><p>{invite.status}</p>
+                  <Button text="Accept" type="button" onClick={() => acceptRequest(invite.id, invite.company_id, invite.user_id)} />
+                  <Button text="Reject" type="button" onClick={() => rejectRequest(invite.id, invite.company_id, invite.user_id)} />
+                  <Button text="Close Window" type="button" onClick={closeModal} />
+                </li>
+              ))}
+
+            </ul>
+            <Button text="Close" type='button' onClick={closeModal} />
+          </Modal>
+        )}
+
+      </div>
 
     </div>
   );
