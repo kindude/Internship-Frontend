@@ -33,7 +33,7 @@ export const rejectRequest_company = async(request_id:number, company_id:number,
           type_of_action: "REQUEST"
         };
   
-        const response = await axiosInstance.post(`/companies/${company_id}/request/accept`, requestData, {
+        const response = await axiosInstance.post(`/companies/${company_id}/request/reject`, requestData, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

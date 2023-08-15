@@ -210,6 +210,8 @@ const CompanyProfilePage: React.FC = () => {
                 <li key={request.id}>
                   <h1>Company_id</h1><p>{request.company_id}</p>
                   <h1>Status</h1><p>{request.status}</p>
+                  <Button text="Accept" type="button" onClick={() => acceptRequest(request.id,request.company_id, request.user_id)} />
+                  <Button text="Reject" type="button" onClick={() => rejectRequest(request.id, request.company_id, request.user_id)} />
                   <Button text="Close" type="button" onClick={closeModal} />
                 </li>
               ))}
@@ -226,8 +228,7 @@ const CompanyProfilePage: React.FC = () => {
                 <li key={invite.id}>
                   <h1>Company_id</h1><p>{invite.company_id}</p>
                   <h1>Status</h1><p>{invite.status}</p>
-                  <Button text="Accept" type="button" onClick={() => acceptRequest(invite.id, invite.company_id, invite.user_id)} />
-                  <Button text="Reject" type="button" onClick={() => rejectRequest(invite.id, invite.company_id, invite.user_id)} />
+                 
                   <Button text="Close Window" type="button" onClick={closeModal} />
                 </li>
               ))}
