@@ -20,9 +20,10 @@ const useAuth0Login = () => {
         });
 
         if (accessToken) {
-          const userRep = await callBackendApi(accessToken);
-
           localStorage.setItem('accessToken', accessToken);
+          const userRep = await callBackendApi();
+
+          
 
           dispatch(updateUser(userRep));
 

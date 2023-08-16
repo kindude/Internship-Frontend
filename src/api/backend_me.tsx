@@ -2,12 +2,8 @@ import { useDispatch } from "react-redux";
 import axiosInstance from "../api/api_instance";
 import { updateUser } from "../reducers/userReducer";
 
-
-const callBackendApi = async (token: string) => {
-
+const callBackendApi = async () => {
     try {
-
-  
       const response = await axiosInstance.post("/me");
       return response.data; 
     } catch (error) {

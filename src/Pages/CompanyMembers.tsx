@@ -28,7 +28,6 @@ const CompanyMembersPage: React.FC = () => {
             
           }
         } catch (error) {
-          // Handle error
         }
       };
 

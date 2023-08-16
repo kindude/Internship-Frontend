@@ -1,15 +1,14 @@
 import axios, { AxiosInstance } from 'axios';
 import React, { useState, useEffect } from "react";
 
-const token = localStorage.getItem("accessToken");
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
-    Authorization:  `Bearer ${token}`,
+    Authorization: `Bearer ${localStorage.getItem("accessToken") || ''}`
   },
-
 });
+
 
 export const fetchData = (endpoint: string) => {
   return axiosInstance.get(endpoint)

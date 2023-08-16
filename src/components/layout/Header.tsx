@@ -15,7 +15,7 @@ const Header: React.FC = () => {
       try {
         const token = localStorage.getItem("accessToken");
         if (token) {
-          const userRep = await callBackendApi(token);
+          const userRep = await callBackendApi();
           dispatch(updateUser(userRep));
         }
       } catch (error) {
