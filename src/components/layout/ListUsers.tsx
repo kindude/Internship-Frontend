@@ -11,7 +11,8 @@ import Modal from "../modal/Modal";
 import ListCompanies from "./ListCompanies";
 import { User } from "../../types/UserResponse";
 import { ReactNode } from "react";
-import { remove_member } from "../../pages/CompanyMembers";
+import { remove_member, makeAdmin, removeAdmin } from "../../pages/CompanyMembers";
+
 
 interface ListUserItem {
   id: number;
@@ -29,9 +30,10 @@ interface ListUsersProps {
   show: boolean;
   companyId: number;
   onRemove?: (userId: number) => void;
+  admin: boolean;
 }
 
-const ListUsers: React.FC<ListUsersProps> = ({ list, show,companyId, onRemove }) => {
+const ListUsers: React.FC<ListUsersProps> = ({ list, show, companyId, onRemove, admin }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [user, setUser] = useState<User>();
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
@@ -139,6 +141,17 @@ const ListUsers: React.FC<ListUsersProps> = ({ list, show,companyId, onRemove })
                 </div>
                 <div className="detail">Roles: {item.roles.join(", ")}</div>
               </div>
+              {admin ? (
+                <Button
+                  text={item.roles.includes("ADMIN") ? "Remove Admin" : "Make Admin"}
+                  type="button"
+                  onClick={() =>
+                    item.roles.includes("ADMIN")
+                        ? removeAdmin(companyId, item.id)
+                        : makeAdmin(companyId, item.id)
+                }
+                />
+              ) : null}
             </div>
           </li>
         ))}

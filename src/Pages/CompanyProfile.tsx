@@ -126,7 +126,7 @@ const CompanyProfilePage: React.FC = () => {
   }
 
 
-  const inviteToCompany = async () => {
+  const requestToCompany = async () => {
     try {
       setRequestStatus('loading');
       const token = localStorage.getItem('accessToken');
@@ -137,7 +137,7 @@ const CompanyProfilePage: React.FC = () => {
         type_of_action: "REQUEST"
       };
       const response = await axiosInstance.post(
-        `/action/invite/create`,
+        `/action/request/create`,
         requestData
       );
 
@@ -151,9 +151,7 @@ const CompanyProfilePage: React.FC = () => {
     }
   };
 
-  const remove_user_from_company = async () => {
 
-  }
 
   const cancelInvite = async (actionId: number, companyId: number, userId: number) => {
     const requestData = {
@@ -173,6 +171,9 @@ const CompanyProfilePage: React.FC = () => {
   const members = (company_id: number) => {
     navigate(`/company-members/${company_id}`);
   };
+  const admins = (company_id: number) => {
+    navigate(`/company-admins/${company_id}`);
+  };
 
   if (error) {
     return <p>{error}</p>
@@ -186,7 +187,7 @@ const CompanyProfilePage: React.FC = () => {
     <div>
       <div>
         {company.owner_id != user?.id && (<Button
-          onClick={inviteToCompany}
+          onClick={requestToCompany}
           text="Request to join the company"
           type="button"
           disabled={requestStatus === 'loading' || requestStatus === 'success'}
@@ -215,6 +216,9 @@ const CompanyProfilePage: React.FC = () => {
         {user && user.id === company?.owner_id && (
           <Button text="MEMBERS" type="button" className='edit' onClick={() => members(company?.id)} />
         )}
+        {user && user.id === company?.owner_id && (
+          <Button text="Admins" type="button" className='edit' onClick={() => admins(company?.id)} />
+        )}
 
 
 
@@ -222,7 +226,7 @@ const CompanyProfilePage: React.FC = () => {
             requests.length > 0 && (
               <Modal windowName='Requests' isOpen={isModalOpen} onClose={closeModal}>
                 <h2>My Requests</h2>
-                <ListActions list={invites} acceptAction={acceptRequest} rejectAction={rejectRequest}>
+                <ListActions list={requests} acceptAction={acceptRequest} rejectAction={rejectRequest}>
                   {(actionId, companyId, userId) => (
                     <div>
                       <Button text="Accept" type="button" onClick={() => acceptRequest(actionId, companyId, userId)} />

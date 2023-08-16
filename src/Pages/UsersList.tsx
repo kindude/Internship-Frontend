@@ -58,7 +58,7 @@ const UsersListPage: React.FC = () => {
   return (
     <div className="users-list-container">
       <h2>Users List</h2>
-      <ListUsers list={users} show={true} companyId={0}/>
+      <ListUsers list={users} show={true} companyId={0} admin={false}/>
       <Pagination
         totalPages={pagination.total_pages}
         currentPage={pagination.page}
