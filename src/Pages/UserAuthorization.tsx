@@ -29,12 +29,15 @@ const UserAuthorizationPage: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const saveTokenToLocalStorage = (token: string) => {
+    localStorage.setItem('accessToken', token);
+  }
+
   const handleFormSubmit = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
     try {
+      console.log(values);
       const response = await axiosInstance.post("/users/login", values);
-      const userRep = await callBackendApi(response.data);
-      localStorage.setItem('accessToken', response.data);
-      dispatch(updateUser(userRep));
+      saveTokenToLocalStorage(response.data);
       navigate("/welcome");
       window.location.reload();
     } catch (error) {
@@ -53,7 +56,7 @@ const UserAuthorizationPage: React.FC = () => {
   };
 
   useEffect(() => {
-  
+
   }, [formValues, navigate, dispatch]);
 
 
@@ -67,17 +70,9 @@ const UserAuthorizationPage: React.FC = () => {
             audience: process.env.REACT_APP_API_AUDIENCE,
           },
         });
-        if (accessToken) {
-          const userRep = await callBackendApi(accessToken);
-          localStorage.setItem('accessToken', accessToken);
-          dispatch(updateUser(userRep));
-          navigate("/welcome");
-          window.location.reload();
-        } else {
-          console.error('Access token is undefined or null.');
-        }
-      } else {
-        console.log("No token returned");
+        localStorage.setItem('accessToken', accessToken);
+        navigate("/welcome");
+        window.location.reload();
       }
     } catch (error) {
       console.error("Error during Auth0 login:", error);
@@ -87,7 +82,7 @@ const UserAuthorizationPage: React.FC = () => {
   return (
     <Formik
       initialValues={formValues}
-      onSubmit={() => {}}
+      onSubmit={() => { }}
     >
       {formik => (
         <Form className="user-auth-form">

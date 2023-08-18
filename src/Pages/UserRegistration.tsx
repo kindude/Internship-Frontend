@@ -43,7 +43,7 @@ const UserRegistrationPage: React.FC = () => {
           },
         });
 
-        const userRep = await callBackendApi(accessToken);
+        const userRep = await callBackendApi();
 
         localStorage.setItem('accessToken', accessToken);
 
