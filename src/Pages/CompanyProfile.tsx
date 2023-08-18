@@ -12,6 +12,7 @@ import { ActionResponse } from "../types/ActionResponse";
 import Modal from "../components/modal/Modal";
 import { acceptRequest_company, rejectRequest_company } from "../api/actions/requests_company";
 import ListActions from "../components/layout/ListActions";
+import Actions from "../components/layout/Actions";
 
 
 
@@ -26,6 +27,7 @@ const CompanyProfilePage: React.FC = () => {
   const [requests, setRequests] = useState<ActionResponse[]>([]);
   const [invites, setInvites] = useState<ActionResponse[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenReq, setIsModalOpenReq] = useState(false);
 
   const navigate = useNavigate();
 
@@ -75,13 +77,21 @@ const CompanyProfilePage: React.FC = () => {
     }
   };
 
+  const openModalReq = () => {
+    setIsModalOpenReq(true);
+  };
+
+  const closeModalReq = () => {
+    setIsModalOpenReq(false);
+  };
+
 
   const fetchRequests = async () => {
     const token = localStorage.getItem("accessToken");
     try {
       const response = await axiosInstance.get(`/companies/${companyId}/requests/all`);
       setRequests(response.data.actions);
-      openModal();
+      openModalReq();
     } catch (error) {
       console.error('Error fetching requests:', error);
     }
@@ -115,6 +125,8 @@ const CompanyProfilePage: React.FC = () => {
     setIsModalOpen(false);
   };
 
+
+
   const acceptRequest = async (request_id: number, company_id: number, user_id: number) => {
     acceptRequest_company(request_id, company_id, user_id);
     fetchRequests();
@@ -142,7 +154,8 @@ const CompanyProfilePage: React.FC = () => {
       );
 
       if (response.status === 200) {
-        setRequestStatus('success'); // Request successful
+        setRequestStatus('success');
+        alert("Request has been sent");
       } else {
         setRequestStatus('error'); // Request failed
       }
@@ -220,37 +233,50 @@ const CompanyProfilePage: React.FC = () => {
           <Button text="Admins" type="button" className='edit' onClick={() => admins(company?.id)} />
         )}
 
+        {requests.length > 0 && (
+          <Actions
+            list={requests}
+            text="My Requests"
+            isModalOpen={isModalOpenReq}
+            closeModal={closeModalReq}
+            accept={acceptRequest}
+            reject={rejectRequest}
+          >
+            {(actionId, companyId, userId) => (
+              <div>
+                <Button
+                  text="Accept"
+                  type="button"
+                  onClick={() => acceptRequest(actionId, companyId, userId)}
+                />
+                <Button
+                  text="Reject"
+                  type="button"
+                  onClick={() => rejectRequest(actionId, companyId, userId)}
+                />
+              </div>
+            )}
+          </Actions>
+        )}
 
-
-          {
-            requests.length > 0 && (
-              <Modal windowName='Requests' isOpen={isModalOpen} onClose={closeModal}>
-                <h2>My Requests</h2>
-                <ListActions list={requests} acceptAction={acceptRequest} rejectAction={rejectRequest}>
-                  {(actionId, companyId, userId) => (
-                    <div>
-                      <Button text="Accept" type="button" onClick={() => acceptRequest(actionId, companyId, userId)} />
-                      <Button text="Reject" type="button" onClick={() => rejectRequest(actionId, companyId, userId)} />
-                    </div>
-                  )}
-                </ListActions>
-                <Button text="Close" type='button' onClick={closeModal} />
-              </Modal>
-            )
-          }
         {invites.length > 0 && (
-          <Modal windowName='Invites' isOpen={isModalOpen} onClose={closeModal}>
-            <h2>My Invites</h2>
-            <ListActions list={invites} cancelAction={cancelInvite}>
-              {(actionId, companyId, userId) => (
-                <div>
-                  <Button text="Cancel" type="button" onClick={() => cancelInvite(actionId, companyId, userId)} />
-                </div>
-              )}
-
-            </ListActions>
-            <Button text="Close" type='button' onClick={closeModal} />
-          </Modal>
+          <Actions
+            list={invites}
+            text="My Invites"
+            isModalOpen={isModalOpen}
+            closeModal={closeModal}
+            cancel={cancelInvite}
+          >
+            {(actionId, companyId, userId) => (
+              <div>
+                <Button
+                  text="Cancel"
+                  type="button"
+                  onClick={() => cancelInvite(actionId, companyId, userId)}
+                />
+              </div>
+            )}
+          </Actions>
         )}
 
       </div>

@@ -71,17 +71,8 @@ const UserAuthorizationPage: React.FC = () => {
           },
         });
         localStorage.setItem('accessToken', accessToken);
-        if (accessToken) {
-          const userRep = await callBackendApi();
-
-          dispatch(updateUser(userRep));
-          navigate("/welcome");
-          window.location.reload();
-        } else {
-          console.error('Access token is undefined or null.');
-        }
-      } else {
-        console.log("No token returned");
+        navigate("/welcome");
+        window.location.reload();
       }
     } catch (error) {
       console.error("Error during Auth0 login:", error);

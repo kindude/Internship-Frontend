@@ -61,15 +61,15 @@ const ListUsers: React.FC<ListUsersProps> = ({ list, show, companyId, onRemove, 
     try {
       const token = localStorage.getItem("accessToken");
       const companiesResponse = await axiosInstance.get("/companies/my/companies");
-
+      console.log(companiesResponse.data.companies);
       if (companiesResponse.status === 200) {
         setCompanies(companiesResponse.data.companies);
         setSelectedCompany(null);
-        setSelectedUser(item as User); // Преобразование ListUserItem в User
+        setSelectedUser(item as User);
         openModal();
       }
     } catch (error) {
-      // Handle error
+
     }
   };
 
@@ -84,14 +84,10 @@ const ListUsers: React.FC<ListUsersProps> = ({ list, show, companyId, onRemove, 
           type_of_action: "INVITE"
         };
 
-        const response = await axiosInstance.post("/companies/invite/create", requestPayload, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
+        const response = await axiosInstance.post("/companies/invite/create", requestPayload);
+        closeModal();
         if (response.status === 201) {
-          // Handle success, maybe show a success message
+          closeModal();
         }
       } catch (error) {
         // Handle error

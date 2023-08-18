@@ -10,6 +10,7 @@ export const acceptInvite_user = async(request_id:number, company_id:number, use
           status: "PENDING",
           type_of_action: "INVITE"
         };
+        console.log(requestData);
   
         const response = await axiosInstance.post(`/action/invite/accept`, requestData);
       } catch (error) {
