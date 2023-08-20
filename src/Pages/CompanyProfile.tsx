@@ -184,6 +184,11 @@ const CompanyProfilePage: React.FC = () => {
   const members = (company_id: number) => {
     navigate(`/company-members/${company_id}`);
   };
+
+  const quizzes = (company_id:number) => {
+    navigate(`/company/${company_id}/quizzes`);
+  };
+  
   const admins = (company_id: number) => {
     navigate(`/company-admins/${company_id}`);
   };
@@ -232,6 +237,10 @@ const CompanyProfilePage: React.FC = () => {
         {user && user.id === company?.owner_id && (
           <Button text="Admins" type="button" className='edit' onClick={() => admins(company?.id)} />
         )}
+        <Button text="Quizzes" type="button" className="edit" onClick={() => quizzes(company?.id)} />
+
+
+
 
         {requests.length > 0 && (
           <Actions
