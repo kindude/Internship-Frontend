@@ -1,11 +1,13 @@
-import { useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { QuizResponse } from "../types/QuizResponse";
 import axiosInstance from "../api/api_instance";
 import { QuestionResponse } from "../types/QuestionReponse";
 import Button from "../components/layout/Button";
+import { useNavigate } from "react-router-dom";
 
 const QuizPage: React.FC = () => {
+    const navigate = useNavigate();
     const { quizId, companyId } = useParams<{ quizId: string; companyId: string }>();
     const [quiz, setQuiz] = useState<QuizResponse | undefined>();
     const [questions, setQuestions] = useState<QuestionResponse[]>([]);
@@ -66,6 +68,8 @@ const QuizPage: React.FC = () => {
         try {
             const response = await axiosInstance.post(`/company/${companyId}/quiz/${quizId}/take-quiz`, selectedAnswers);
             console.log("Quiz submitted successfully!", response.data);
+            navigate(`/companyPage/${companyId}`);
+
         } catch (error) {
             console.error("Error submitting quiz:", error);
         }

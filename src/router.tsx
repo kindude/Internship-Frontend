@@ -19,6 +19,8 @@ import CompanyMembersPage from "./pages/CompanyMembers";
 import CompanyAdminsPage from "./pages/CompanyAdmins";
 import QuizzesPage from "./pages/QuizzesPage";
 import QuizPage from "./pages/QuizPage";
+import QuizCreatePage from "./pages/QuizCreatePage";
+import QuizEditPage from "./pages/QuizEditPage";
 
 const AppRouter: React.FC = () => {
 
@@ -43,6 +45,8 @@ const AppRouter: React.FC = () => {
                     <Route path="/company-admins/:companyId" element={<CompanyAdminsPage/>} />
                     <Route path="/company/:companyId/quizzes" element={<QuizzesPage/>} />
                     <Route path="/company/:companyId/quiz/:quizId" element={<QuizPage/>} />
+                    <Route path="/companyPage/:companyId/quizzes/create-quiz" element={<QuizCreatePage/>}/>
+                    <Route path="/companyPage/:companyId/quiz/:quizId/update" element={<QuizEditPage/>}/>
                     
                 </Routes>
                 <Footer />

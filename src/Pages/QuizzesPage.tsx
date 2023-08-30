@@ -6,6 +6,18 @@ import { QuizResponse } from "../types/QuizResponse";
 import axiosInstance from "../api/api_instance";
 
 
+export const deleteQuiz = async (company_id:number, quiz_id:number) => {
+    try
+    {
+      const response = await axiosInstance.post(`/company/${company_id}/quiz/${quiz_id}/delete`);
+      window.location.reload();
+    }
+    catch(error){
+      console.log(error);
+    }
+
+  };
+
 const QuizzesPage: React.FC = () => {
 
     const { companyId } = useParams<{ companyId: string }>();
