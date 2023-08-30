@@ -6,6 +6,7 @@ import { QuizRequest } from "../types/QuizResponse";
 import { QuestionRequest } from "../types/QuestionReponse";
 import { OptionRequest } from "../types/OptionResponse";
 import { useNavigate } from "react-router-dom";
+import "../styles/QuizCreatePage.css";
 
 
 const QuizCreatePage: React.FC = () => {
@@ -104,9 +105,9 @@ const QuizCreatePage: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="quiz-create-page">
       <h2>Create Quiz</h2>
-      <div>
+      <div className="quiz-form">
         <label>
           Quiz Title:
           <input type="text" value={quizTitle} onChange={(e) => setQuizTitle(e.target.value)} />
@@ -129,6 +130,7 @@ const QuizCreatePage: React.FC = () => {
               type="button"
               text="Remove Question"
               onClick={() => handleRemoveQuestion(questionIndex)}
+              className="remove-button"
             />
           )}
           <label>
@@ -169,6 +171,7 @@ const QuizCreatePage: React.FC = () => {
                       type="button"
                       text="Remove Option"
                       onClick={() => handleRemoveOption(questionIndex, optionIndex)}
+                      className="add-option-button"
                     />
                   )}
                 </label>
@@ -176,14 +179,14 @@ const QuizCreatePage: React.FC = () => {
             ))}
           </ul>
           {question.options.length < 6 && (
-            <Button type="button" text="Add Option" onClick={() => handleAddOption(questionIndex)} />
+            <Button type="button" text="Add Option" onClick={() => handleAddOption(questionIndex)} className="add-option-button" />
           )}
         </div>
       ))}
       {questions.length < 10 && (
-        <Button type="button" text="Add Question" onClick={handleAddQuestion} />
+        <Button type="button" text="Add Question" onClick={handleAddQuestion} className="add-question-button"/>
       )}
-      <Button type="button" text="Save Quiz" onClick={handleSaveQuiz} />
+      <Button type="button" text="Save Quiz" onClick={handleSaveQuiz}   className="save-quiz-button"/>
     </div>
   );
 };

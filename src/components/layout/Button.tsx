@@ -1,5 +1,5 @@
 import React from 'react';
-
+import "../../styles/Button.css";
 
 export interface ButtonProps {
     type: "button" | "submit" | "reset" | undefined;
@@ -10,7 +10,7 @@ export interface ButtonProps {
   }
 
 
- // Button.tsx
+
 
 const Button: React.FC<ButtonProps> = (props: ButtonProps) => {
   const { onClick, type, text, disabled=false} = props;
