@@ -1,0 +1,92 @@
+.quiz-create-page {
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .quiz-create-page h2 {
+    margin-bottom: 20px;
+  }
+  
+  .quiz-form {
+    margin-bottom: 20px;
+  }
+  
+  .quiz-form label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  
+  .quiz-form input[type="text"],
+  .quiz-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .quiz-form ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .quiz-form ul li {
+    margin-bottom: 20px;
+  }
+  
+  .quiz-form li label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .quiz-form input[type="checkbox"] {
+    margin-right: 5px;
+  }
+  
+  .quiz-form .button-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .quiz-form .button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .quiz-form .button:hover {
+    background-color: #2980b9;
+  }
+  
+  .quiz-form .button.disabled {
+    cursor: not-allowed;
+    background-color: #bdc3c7;
+  }
+
+
+  .remove-button {
+    background-color: #e74c3c;
+  }
+  
+  .add-option-button {
+    background-color: #27ae60;
+  }
+  
+  .add-question-button {
+    background-color: #3498db;
+  }
+  
+  .save-quiz-button {
+    background-color: #f39c12;
+  }
+  

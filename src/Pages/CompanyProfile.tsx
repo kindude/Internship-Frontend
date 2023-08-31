@@ -4,16 +4,12 @@ import { useSelector } from "react-redux";
 import { RootState } from "../types/types";
 import axiosInstance from "../api/api_instance";
 import { Company } from "../types/CompanyResponse";
-import { Formik, Form, FormikHelpers } from "formik";
-import Input from "../components/layout/Input";
 import Button from "../components/layout/Button";
 import { useNavigate } from "react-router-dom";
 import { ActionResponse } from "../types/ActionResponse";
-import Modal from "../components/modal/Modal";
 import { acceptRequest_company, rejectRequest_company } from "../api/actions/requests_company";
-import ListActions from "../components/layout/ListActions";
 import Actions from "../components/layout/Actions";
-
+import "../styles/CompanyProfilePage.css";
 
 
 
@@ -184,26 +180,32 @@ const CompanyProfilePage: React.FC = () => {
   const members = (company_id: number) => {
     navigate(`/company-members/${company_id}`);
   };
+
+  const quizzes = (company_id: number) => {
+    navigate(`/company/${company_id}/quizzes`);
+  };
+
   const admins = (company_id: number) => {
     navigate(`/company-admins/${company_id}`);
   };
 
   if (error) {
-    return <p>{error}</p>
+    return <p className="error-message">{error}</p>;
   }
 
   if (!company) {
-    return <p>Loading company data...</p>
+    return <p className="loading-message">Loading company data...</p>;
   }
 
   return (
-    <div>
-      <div>
+    <div className="company-profile">
+      <div className="company-info">
         {company.owner_id != user?.id && (<Button
           onClick={requestToCompany}
           text="Request to join the company"
           type="button"
           disabled={requestStatus === 'loading' || requestStatus === 'success'}
+          className="join-button"
         />)}
 
 
@@ -214,24 +216,33 @@ const CompanyProfilePage: React.FC = () => {
         <p>Country: {company?.country}</p>
         <p>Site: {company?.site}</p>
 
-        {user && user.id === company?.owner_id && (
-          <Button text="Edit" type="submit" onClick={handleFormUpdate} />
-        )}
-        {user && user.id === company?.owner_id && (
-          <Button text="Delete" type="submit" onClick={handleFormDelete} />
-        )}
-        {user && user.id === company?.owner_id && (
-          <Button text="Company requests" type="button" onClick={fetchRequests} className='edit' />
-        )}
-        {user && user.id === company?.owner_id && (
-          <Button text="Company invites" type="button" onClick={fetchInvites} className='edit' />
-        )}
-        {user && user.id === company?.owner_id && (
-          <Button text="MEMBERS" type="button" className='edit' onClick={() => members(company?.id)} />
-        )}
-        {user && user.id === company?.owner_id && (
-          <Button text="Admins" type="button" className='edit' onClick={() => admins(company?.id)} />
-        )}
+        <div className="button-container">
+          {user && user.id === company?.owner_id && (
+            <Button text="Edit" type="submit" onClick={handleFormUpdate} />
+          )}
+          {user && user.id === company?.owner_id && (
+            <Button text="Delete" type="submit" onClick={handleFormDelete} />
+          )}
+          {user && user.id === company?.owner_id && (
+            <Button text="Company requests" type="button" onClick={fetchRequests} className='edit' />
+          )}
+          {user && user.id === company?.owner_id && (
+            <Button text="Company invites" type="button" onClick={fetchInvites} className='edit' />
+          )}
+          {user && user.id === company?.owner_id && (
+            <Button text="MEMBERS" type="button" className='edit' onClick={() => members(company?.id)} />
+          )}
+          {user && user.id === company?.owner_id && (
+            <Button text="Admins" type="button" className='edit' onClick={() => admins(company?.id)} />
+          )}
+
+          {user && user.id === company?.owner_id && (
+            <Button text="Create Quiz" type="button" className='edit' onClick={() => navigate(`/companyPage/${companyId}/quizzes/create-quiz`)} />
+          )}
+          <Button text="Quizzes" type="button" className="edit" onClick={() => quizzes(company?.id)} />
+        </div>
+
+
 
         {requests.length > 0 && (
           <Actions
