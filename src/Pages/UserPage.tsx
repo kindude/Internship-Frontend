@@ -33,7 +33,7 @@ const UserPage: React.FC = () => {
   const [isModalOpenReq, setIsModalOpenReq] = useState(false);
   const [isModalOpenInv, setIsModalOpenInv] = useState(false);
   const [isModalOpenCompanies, setIsModalOpenCompanies] = useState(false);
-
+  const [exportFormat, setExportFormat] = useState('json');
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -142,6 +142,32 @@ const UserPage: React.FC = () => {
     fetchInvites();
   };
 
+  const handleExport = async () => {
+    try {
+      const response = await axiosInstance.get(`/export/user-results/${userId}/${exportFormat}`);
+      if (exportFormat === 'json') {
+        const blob = new Blob([JSON.stringify(response.data)], { type: 'application/json' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'user_results.json';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      } else if (exportFormat === 'csv') {
+        const blob = new Blob([response.data], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'user_results.csv';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+    } catch (error) {
+      console.error('Error exporting user results:', error);
+    }
+  };
+
+
   if (error) {
     return <p>{error}</p>;
   }
@@ -235,6 +261,9 @@ const UserPage: React.FC = () => {
             <Button text="My requests" type="button" onClick={fetchRequests} className='edit' />
             <Button text="My invites" type="button" onClick={fetchInvites} className='edit' />
             <Button text="Companies I'm in" type="button" onClick={fetchCompaniesImIn} className='edit' />
+            <button onClick={() => setExportFormat('json')}>Export JSON</button>
+            <button onClick={() => setExportFormat('csv')}>Export CSV</button>
+            <button onClick={handleExport}>Export Data</button>
           </div>
         )}
       </div>
