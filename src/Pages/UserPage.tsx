@@ -124,10 +124,10 @@ const UserPage: React.FC = () => {
 
       const response = await axiosInstance.get("/user/notifications/get");
       if (response.status === 200) {
-        const notifications = response.data.notifications;
+        const notifications = response.data;  
         setNotifications(notifications);
         if (notifications.length === 0) {
-          alert("You are not in any companies .");
+          alert("You don't have notifications .");
         }
         openModalNotifs();
       }
