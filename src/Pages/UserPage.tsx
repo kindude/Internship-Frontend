@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import Actions from '../components/layout/Actions';
 import { Notification } from '../types/NotificationResponse';
 import ListNotifications from '../components/layout/ListNotifications';
+import { handleExport } from '../utils/handleExport';
 
 export const leaveCompany = async (company_id: number) => {
   const response = axiosInstance.post(`/action/leave_company/${company_id}`);
@@ -176,29 +177,8 @@ const UserPage: React.FC = () => {
     fetchInvites();
   };
 
-  const handleExport = async () => {
-    try {
-      const response = await axiosInstance.get(`/export/user-results/${userId}/${exportFormat}`);
-      if (exportFormat === 'json') {
-        const blob = new Blob([JSON.stringify(response.data)], { type: 'application/json' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'user_results.json';
-        a.click();
-        window.URL.revokeObjectURL(url);
-      } else if (exportFormat === 'csv') {
-        const blob = new Blob([response.data], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'user_results.csv';
-        a.click();
-        window.URL.revokeObjectURL(url);
-      }
-    } catch (error) {
-      console.error('Error exporting user results:', error);
-    }
+  const handleExportFile = async () => {
+    await handleExport(`/export/user-results/${userId}/${exportFormat}`, exportFormat, "user_results");
   };
 
 
@@ -309,7 +289,7 @@ const UserPage: React.FC = () => {
             <Button text="Companies I'm in" type="button" onClick={fetchCompaniesImIn} className='edit' />
             <Button type="button" text="Export JSON" onClick={() => setExportFormat('json')}/>
             <Button type="button" text="Export CSV" onClick={() => setExportFormat('csv')}/>
-            <Button type="button" text="Export Data"onClick={handleExport}/>
+            <Button type="button" text="Export Data"onClick={handleExportFile}/>
             <Button type="button" text="My Notifications" onClick={fetchNotifications}/>
           </div>
         )}
