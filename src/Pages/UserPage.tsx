@@ -15,6 +15,8 @@ import { Company } from '../types/CompanyResponse';
 import ListCompanies from '../components/layout/ListCompanies';
 import { useNavigate } from "react-router-dom";
 import Actions from '../components/layout/Actions';
+import { handleExport } from '../utils/handleExport';
+
 
 export const leaveCompany = async (company_id: number) => {
   const response = axiosInstance.post(`/action/leave_company/${company_id}`);
@@ -142,29 +144,10 @@ const UserPage: React.FC = () => {
     fetchInvites();
   };
 
-  const handleExport = async () => {
-    try {
-      const response = await axiosInstance.get(`/export/user-results/${userId}/${exportFormat}`);
-      if (exportFormat === 'json') {
-        const blob = new Blob([JSON.stringify(response.data)], { type: 'application/json' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'user_results.json';
-        a.click();
-        window.URL.revokeObjectURL(url);
-      } else if (exportFormat === 'csv') {
-        const blob = new Blob([response.data], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'user_results.csv';
-        a.click();
-        window.URL.revokeObjectURL(url);
-      }
-    } catch (error) {
-      console.error('Error exporting user results:', error);
-    }
+  const handleExportFile = async () => {
+
+    await handleExport(`/export/user-results/${userId}/${exportFormat}`, exportFormat, "user_results");
+  
   };
 
 
@@ -261,9 +244,9 @@ const UserPage: React.FC = () => {
             <Button text="My requests" type="button" onClick={fetchRequests} className='edit' />
             <Button text="My invites" type="button" onClick={fetchInvites} className='edit' />
             <Button text="Companies I'm in" type="button" onClick={fetchCompaniesImIn} className='edit' />
-            <button onClick={() => setExportFormat('json')}>Export JSON</button>
-            <button onClick={() => setExportFormat('csv')}>Export CSV</button>
-            <button onClick={handleExport}>Export Data</button>
+            <Button text="Export JSON" type ="button" onClick={() => setExportFormat('json')}/>
+            <Button text="Export CSV" type ="button" onClick={() => setExportFormat('csv')}/>
+            <Button text="Export Data" type ="button" onClick={handleExportFile}/>
           </div>
         )}
       </div>

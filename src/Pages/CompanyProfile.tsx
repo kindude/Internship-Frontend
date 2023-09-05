@@ -10,7 +10,7 @@ import { ActionResponse } from "../types/ActionResponse";
 import { acceptRequest_company, rejectRequest_company } from "../api/actions/requests_company";
 import Actions from "../components/layout/Actions";
 import "../styles/CompanyProfilePage.css";
-
+import { handleExport } from "../utils/handleExport";
 
 
 const CompanyProfilePage: React.FC = () => {
@@ -189,29 +189,8 @@ const CompanyProfilePage: React.FC = () => {
     navigate(`/company-admins/${company_id}`);
   };
 
-  const handleExport = async () => {
-    try {
-      const response = await axiosInstance.get(`/export/company-results/${companyId}/${exportFormat}`);
-      if (exportFormat === 'json') {
-        const blob = new Blob([JSON.stringify(response.data)], { type: 'application/json' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'company_results.json';
-        a.click();
-        window.URL.revokeObjectURL(url);
-      } else if (exportFormat === 'csv') {
-        const blob = new Blob([response.data], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'company_results.csv';
-        a.click();
-        window.URL.revokeObjectURL(url);
-      }
-    } catch (error) {
-      console.error('Error exporting user results:', error);
-    }
+  const handleExportFile = async () => {
+    await handleExport(`/export/company-results/${companyId}/${exportFormat}`, exportFormat, "company_results");
   };
 
 
@@ -270,7 +249,7 @@ const CompanyProfilePage: React.FC = () => {
             <div>
               <Button type="button" text="Export JSON" onClick={() => setExportFormat('json')} />
               <Button type="button" text="Export CSV" onClick={() => setExportFormat('csv')} />
-              <Button type="button" text="Export Data" onClick={handleExport} />
+              <Button type="button" text="Export Data" onClick={handleExportFile} />
             </div>
           )}
 
