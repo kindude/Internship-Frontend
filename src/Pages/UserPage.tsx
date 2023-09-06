@@ -15,6 +15,8 @@ import { Company } from '../types/CompanyResponse';
 import ListCompanies from '../components/layout/ListCompanies';
 import { useNavigate } from "react-router-dom";
 import Actions from '../components/layout/Actions';
+import { Notification } from '../types/NotificationResponse';
+import ListNotifications from '../components/layout/ListNotifications';
 import { handleExport } from '../utils/handleExport';
 
 
@@ -32,9 +34,11 @@ const UserPage: React.FC = () => {
   const [requests, setRequests] = useState<ActionResponse[]>([]);
   const [invites, setInvites] = useState<ActionResponse[]>([]);
   const [companies, setCompanies] = useState<Company[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isModalOpenReq, setIsModalOpenReq] = useState(false);
   const [isModalOpenInv, setIsModalOpenInv] = useState(false);
   const [isModalOpenCompanies, setIsModalOpenCompanies] = useState(false);
+  const [isModalOpenNotifs, setIsModalOpenNotifs] = useState(false);
   const [exportFormat, setExportFormat] = useState('json');
 
   useEffect(() => {
@@ -89,6 +93,9 @@ const UserPage: React.FC = () => {
     setIsModalOpenInv(true);
   };
 
+
+
+
   const fetchCompaniesImIn = async () => {
     try {
       const response = await axiosInstance.get("/companies/user/in");
@@ -104,6 +111,33 @@ const UserPage: React.FC = () => {
       console.error("Error fetching companies I'm in:", error);
     }
   };
+
+  const openModalNotifs = () => {
+    setIsModalOpenNotifs(true);
+  };
+
+  const closeModalNotifs = () => {
+    setIsModalOpenNotifs(false);
+  };
+
+
+  const fetchNotifications = async () => {
+    try {
+
+      const response = await axiosInstance.get("/user/notifications/get");
+      if (response.status === 200) {
+        const notifications = response.data;  
+        setNotifications(notifications);
+        if (notifications.length === 0) {
+          alert("You don't have notifications .");
+        }
+        openModalNotifs();
+      }
+
+    } catch (error) {
+      console.error("Error fetching notifications", error);
+    }
+  }
 
   const openModalCompanies = () => {
     setIsModalOpenCompanies(true);
@@ -147,7 +181,7 @@ const UserPage: React.FC = () => {
   const handleExportFile = async () => {
 
     await handleExport(`/export/user-results/${userId}/${exportFormat}`, exportFormat, "user_results");
-  
+
   };
 
 
@@ -237,6 +271,18 @@ const UserPage: React.FC = () => {
           </Modal>
         )}
 
+        {notifications.length > 0 && (
+          <Modal
+            windowName="Notifications"
+            isOpen={isModalOpenNotifs}
+            onClose={() => closeModal(setIsModalOpenNotifs)}
+          >
+            <h2>My notifications</h2>
+            <ListNotifications list={notifications} />
+            <Button text="Close" type="button" onClick={() => closeModal(closeModalNotifs)} />
+          </Modal>
+        )}
+
         {currentUser && currentUser.id === user.id && (
           <div className="user-profile-actions">
             <Button text="Edit" type="submit" onClick={handleEdit} className="edit" />
@@ -244,9 +290,11 @@ const UserPage: React.FC = () => {
             <Button text="My requests" type="button" onClick={fetchRequests} className='edit' />
             <Button text="My invites" type="button" onClick={fetchInvites} className='edit' />
             <Button text="Companies I'm in" type="button" onClick={fetchCompaniesImIn} className='edit' />
-            <Button text="Export JSON" type ="button" onClick={() => setExportFormat('json')}/>
-            <Button text="Export CSV" type ="button" onClick={() => setExportFormat('csv')}/>
-            <Button text="Export Data" type ="button" onClick={handleExportFile}/>
+            <Button type="button" text="Export JSON" onClick={() => setExportFormat('json')}/>
+            <Button type="button" text="Export CSV" onClick={() => setExportFormat('csv')}/>
+            <Button type="button" text="Export Data"onClick={handleExportFile}/>
+            <Button type="button" text="My Notifications" onClick={fetchNotifications}/>
+
           </div>
         )}
       </div>

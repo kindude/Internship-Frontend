@@ -10,21 +10,21 @@ type ModalProps = {
 }
 
 const Modal: React.FC<ModalProps> = ({ windowName, isOpen, onClose, children }) => {
-  if (!isOpen) return null;
+    if (!isOpen) return null;
 
-  return (
-      <div className="modal-overlay">
-          <div className="modal-content">
-              <div className="modal-header">
-                  {windowName}
-                  <span className="modal-close" onClick={onClose}>
-                      &times;
-                  </span>
-              </div>
-              {children}
-          </div>
-      </div>
-  );
+    return (
+        <div className="modal-overlay">
+            <div className="modal-content modal-content-scrollable">
+                <div className="modal-header">
+                    {windowName}
+                    <span className="modal-close" onClick={onClose}>
+                        &times;
+                    </span>
+                </div>
+                {children}
+            </div>
+        </div>
+    );
 };
 
 export default Modal;
