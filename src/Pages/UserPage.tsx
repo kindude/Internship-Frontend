@@ -19,6 +19,7 @@ import { Notification } from '../types/NotificationResponse';
 import ListNotifications from '../components/layout/ListNotifications';
 import { handleExport } from '../utils/handleExport';
 
+
 export const leaveCompany = async (company_id: number) => {
   const response = axiosInstance.post(`/action/leave_company/${company_id}`);
 }
@@ -178,7 +179,9 @@ const UserPage: React.FC = () => {
   };
 
   const handleExportFile = async () => {
+
     await handleExport(`/export/user-results/${userId}/${exportFormat}`, exportFormat, "user_results");
+
   };
 
 
@@ -291,6 +294,7 @@ const UserPage: React.FC = () => {
             <Button type="button" text="Export CSV" onClick={() => setExportFormat('csv')}/>
             <Button type="button" text="Export Data"onClick={handleExportFile}/>
             <Button type="button" text="My Notifications" onClick={fetchNotifications}/>
+
           </div>
         )}
       </div>
