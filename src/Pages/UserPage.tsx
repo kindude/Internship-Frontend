@@ -15,6 +15,8 @@ import { Company } from '../types/CompanyResponse';
 import ListCompanies from '../components/layout/ListCompanies';
 import { useNavigate } from "react-router-dom";
 import Actions from '../components/layout/Actions';
+import { handleExport } from '../utils/handleExport';
+
 
 export const leaveCompany = async (company_id: number) => {
   const response = axiosInstance.post(`/action/leave_company/${company_id}`);
@@ -33,7 +35,7 @@ const UserPage: React.FC = () => {
   const [isModalOpenReq, setIsModalOpenReq] = useState(false);
   const [isModalOpenInv, setIsModalOpenInv] = useState(false);
   const [isModalOpenCompanies, setIsModalOpenCompanies] = useState(false);
-
+  const [exportFormat, setExportFormat] = useState('json');
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -142,6 +144,13 @@ const UserPage: React.FC = () => {
     fetchInvites();
   };
 
+  const handleExportFile = async () => {
+
+    await handleExport(`/export/user-results/${userId}/${exportFormat}`, exportFormat, "user_results");
+  
+  };
+
+
   if (error) {
     return <p>{error}</p>;
   }
@@ -235,6 +244,9 @@ const UserPage: React.FC = () => {
             <Button text="My requests" type="button" onClick={fetchRequests} className='edit' />
             <Button text="My invites" type="button" onClick={fetchInvites} className='edit' />
             <Button text="Companies I'm in" type="button" onClick={fetchCompaniesImIn} className='edit' />
+            <Button text="Export JSON" type ="button" onClick={() => setExportFormat('json')}/>
+            <Button text="Export CSV" type ="button" onClick={() => setExportFormat('csv')}/>
+            <Button text="Export Data" type ="button" onClick={handleExportFile}/>
           </div>
         )}
       </div>

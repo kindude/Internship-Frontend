@@ -10,7 +10,7 @@ import { ActionResponse } from "../types/ActionResponse";
 import { acceptRequest_company, rejectRequest_company } from "../api/actions/requests_company";
 import Actions from "../components/layout/Actions";
 import "../styles/CompanyProfilePage.css";
-
+import { handleExport } from "../utils/handleExport";
 
 
 const CompanyProfilePage: React.FC = () => {
@@ -24,7 +24,7 @@ const CompanyProfilePage: React.FC = () => {
   const [invites, setInvites] = useState<ActionResponse[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpenReq, setIsModalOpenReq] = useState(false);
-
+  const [exportFormat, setExportFormat] = useState('json');
   const navigate = useNavigate();
 
   const fetchCompany = async () => {
@@ -153,10 +153,10 @@ const CompanyProfilePage: React.FC = () => {
         setRequestStatus('success');
         alert("Request has been sent");
       } else {
-        setRequestStatus('error'); // Request failed
+        setRequestStatus('error');
       }
     } catch (error) {
-      setRequestStatus('error'); // Request failed
+      setRequestStatus('error');
     }
   };
 
@@ -188,6 +188,11 @@ const CompanyProfilePage: React.FC = () => {
   const admins = (company_id: number) => {
     navigate(`/company-admins/${company_id}`);
   };
+
+  const handleExportFile = async () => {
+    await handleExport(`/export/company-results/${companyId}/${exportFormat}`, exportFormat, "company_results");
+  };
+
 
   if (error) {
     return <p className="error-message">{error}</p>;
@@ -240,6 +245,14 @@ const CompanyProfilePage: React.FC = () => {
             <Button text="Create Quiz" type="button" className='edit' onClick={() => navigate(`/companyPage/${companyId}/quizzes/create-quiz`)} />
           )}
           <Button text="Quizzes" type="button" className="edit" onClick={() => quizzes(company?.id)} />
+          {user && user.id === company?.owner_id && (
+            <div>
+              <Button type="button" text="Export JSON" onClick={() => setExportFormat('json')} />
+              <Button type="button" text="Export CSV" onClick={() => setExportFormat('csv')} />
+              <Button type="button" text="Export Data" onClick={handleExportFile} />
+            </div>
+          )}
+
         </div>
 
 
