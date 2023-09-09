@@ -189,6 +189,10 @@ const CompanyProfilePage: React.FC = () => {
     navigate(`/company-admins/${company_id}`);
   };
 
+  const usersAnalytics = (company_id: number) => {
+    navigate(`/companyPage/${company_id}/members/analytics`);
+  }
+
   const handleExportFile = async () => {
     await handleExport(`/export/company-results/${companyId}/${exportFormat}`, exportFormat, "company_results");
   };
@@ -250,6 +254,7 @@ const CompanyProfilePage: React.FC = () => {
               <Button type="button" text="Export JSON" onClick={() => setExportFormat('json')} />
               <Button type="button" text="Export CSV" onClick={() => setExportFormat('csv')} />
               <Button type="button" text="Export Data" onClick={handleExportFile} />
+              <Button type="button" text="Members Analytics" onClick={() => usersAnalytics(company?.id)} />
             </div>
           )}
 
