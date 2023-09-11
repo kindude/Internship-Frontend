@@ -12,7 +12,8 @@ import ListCompanies from "./ListCompanies";
 import { User } from "../../types/UserResponse";
 import { ReactNode } from "react";
 import { remove_member, makeAdmin, removeAdmin } from "../../pages/CompanyMembers";
-
+import { useNavigate } from "react-router-dom";
+import { CompanyUserLastCompletion } from "../../types/CompanyUserLastCompletion";
 
 interface ListUserItem {
   id: number;
@@ -38,10 +39,35 @@ const ListUsers: React.FC<ListUsersProps> = ({ list, show, companyId, onRemove, 
   const [user, setUser] = useState<User>();
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [lastCompletionTime, setLastCompletionTime] = useState<string | null>(null);
+  const [lastCompletionTimes, setLastCompletionTimes] = useState<{ [userId: number]: string | null }>({});
+
+  const fetchLastCompletionTime = async (company_id: number, userId: number) => {
+    try {
+      const response = await axiosInstance.get(`/company/${company_id}/get-last-time`);
+      if (response.status === 200) {
+        const lastTime = response.data.last_completions.find((item: CompanyUserLastCompletion) => item.user_id === userId)?.last_completion_time;
+        setLastCompletionTimes((prevTimes) => ({
+          ...prevTimes,
+          [userId]: lastTime || "N/A",
+        }));
+      }
+    } catch (error) {
+      console.error("Error fetching last completion time:", error);
+    }
+  };
+  
+  // Вызывайте функцию fetchLastCompletionTime в useEffect с передачей companyId и userId
+  useEffect(() => {
+    list.forEach((userItem) => {
+      fetchLastCompletionTime(companyId, userItem.id);
+    });
+  }, [list, companyId]);
+
   const openModal = () => {
     setIsModalOpen(true);
   };
-
+  const navigate = useNavigate();
 
 
   const closeModal = () => {
@@ -90,10 +116,15 @@ const ListUsers: React.FC<ListUsersProps> = ({ list, show, companyId, onRemove, 
           closeModal();
         }
       } catch (error) {
-        // Handle error
+
       }
     }
   };
+
+  const get_member_analytics = (companyId:number, user_id:number) => {
+    console.log
+    navigate(`/company/${companyId}/member/${user_id}/analytics`);
+  }
 
 
 
@@ -121,8 +152,7 @@ const ListUsers: React.FC<ListUsersProps> = ({ list, show, companyId, onRemove, 
                   text="Remove"
                   type="button"
                   className="edit"
-                  onClick={() => remove_member(companyId, item.id)
-                  }
+                  onClick={() => remove_member(companyId, item.id)}
                 />
               )}
 
@@ -136,18 +166,26 @@ const ListUsers: React.FC<ListUsersProps> = ({ list, show, companyId, onRemove, 
                   {item.status ? "Active" : "Inactive"}
                 </div>
                 <div className="detail">Roles: {item.roles.join(", ")}</div>
+                {admin ? (
+                  <div>
+                    <div className="detail">Last Completion: {lastCompletionTimes[item.id] || "N/A"}</div>
+                    <Button
+                      text={item.roles.includes("ADMIN") ? "Remove Admin" : "Make Admin"}
+                      type="button"
+                      onClick={() =>
+                        item.roles.includes("ADMIN")
+                          ? removeAdmin(companyId, item.id)
+                          : makeAdmin(companyId, item.id)
+                      }
+                    />
+                    <Button
+                      text="Get User Analytics"
+                      type="button"
+                      onClick={() => get_member_analytics(companyId, item.id)}
+                    />
+                  </div>
+                ) : null}
               </div>
-              {admin ? (
-                <Button
-                  text={item.roles.includes("ADMIN") ? "Remove Admin" : "Make Admin"}
-                  type="button"
-                  onClick={() =>
-                    item.roles.includes("ADMIN")
-                        ? removeAdmin(companyId, item.id)
-                        : makeAdmin(companyId, item.id)
-                }
-                />
-              ) : null}
             </div>
           </li>
         ))}

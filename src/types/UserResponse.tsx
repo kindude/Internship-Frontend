@@ -9,5 +9,14 @@ export interface User {
     phone: string;
     status: boolean;
     roles: string[];
-  }
+  };
 
+export interface UserAverage{
+  user_id: string;
+  average: number;
+  time: string;
+};
+
+export interface ListUsersAverages{
+  averages: UserAverage[];
+}

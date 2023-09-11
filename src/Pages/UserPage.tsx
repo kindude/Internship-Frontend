@@ -18,6 +18,12 @@ import Actions from '../components/layout/Actions';
 import { Notification } from '../types/NotificationResponse';
 import ListNotifications from '../components/layout/ListNotifications';
 import { handleExport } from '../utils/handleExport';
+import { LastQuizCompletion } from '../types/LastQuizCompletion';
+import { ListLastQuizCompletion } from '../types/LastQuizCompletion';
+import { Line } from 'react-chartjs-2';
+import { fetchAnalytics } from '../utils/UserAverages';
+import MyChart from '../components/layout/MyChart';
+
 
 
 export const leaveCompany = async (company_id: number) => {
@@ -40,6 +46,38 @@ const UserPage: React.FC = () => {
   const [isModalOpenCompanies, setIsModalOpenCompanies] = useState(false);
   const [isModalOpenNotifs, setIsModalOpenNotifs] = useState(false);
   const [exportFormat, setExportFormat] = useState('json');
+  const [lastQuizCompletions, setLastQuizCompletions] = useState<LastQuizCompletion[]>([]);
+  const [chartData, setChartData] = useState<any | null>(null);
+  
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchAnalytics(`/user/me/get-quizzes-averages`);
+        setChartData(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, [userId]);
+
+
+  useEffect(() => {
+    const fetchLastQuizCompletions = async () => {
+      try {
+        const response = await axiosInstance.get<ListLastQuizCompletion>('/user/me/get-quizzes_and-times');
+        if (response.status === 200) {
+          setLastQuizCompletions(response.data.completions);
+        }
+      } catch (error) {
+        console.error('Error fetching last quiz completions:', error);
+      }
+    };
+
+    fetchLastQuizCompletions();
+  }, []);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -92,8 +130,6 @@ const UserPage: React.FC = () => {
   const openModalInv = () => {
     setIsModalOpenInv(true);
   };
-
-
 
 
   const fetchCompaniesImIn = async () => {
@@ -207,6 +243,19 @@ const UserPage: React.FC = () => {
           <p>Phone: {user.phone}</p>
         </div>
 
+        {lastQuizCompletions.length > 0 && (
+          <div className="last-quiz-completions">
+            <h2>Last Quiz Completions</h2>
+            <ul>
+              {lastQuizCompletions.map((completion, index) => (
+                <li key={index}>
+                  Quiz ID: {completion.quiz_id}, Last Completion Time: {completion.last_completion_time}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         {requests.length > 0 && (
           <Actions
             list={requests}
@@ -298,6 +347,14 @@ const UserPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      <div>
+      <h1>Мой график по квизам</h1>
+
+      {chartData && (
+        <MyChart chartData={chartData}/>
+      )}
+    </div>
     </div>
   );
 };
